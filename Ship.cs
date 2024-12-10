@@ -2,7 +2,6 @@ using System;
 
 namespace BattleShip
 {
-
     // 나무위키 1990년판 참고
     public enum ShipType
     {
@@ -32,6 +31,13 @@ namespace BattleShip
         {
             get { return _isHit; }
             set { _isHit = value; }
+        }
+
+        
+        // 두개 앤드 비교해서 맞았는지
+        public bool CompareHit(Point point)
+        {
+            return PosX == point.PosX && PosY == point.PosY;
         }
     }
     
@@ -69,7 +75,6 @@ namespace BattleShip
                 {
                     _size = value;
                 }
-                
             }
         }
 
@@ -137,21 +142,40 @@ namespace BattleShip
             IsAlive = isAlive;
         }
 
-        // public bool IsHit(Point point)
-        // {
-        //     for (int i = 0; i < Point.Length; i++)
-        //     {
-        //         
-        //     }
-        //
-        //     return true;
-        // }
-        
-        // 가라 앉았는지 출력해주는 판단. 콘솔로 가라 앉았습니다 출력 
-        public bool IsSink()
+        // 내 배의 Point를 모두 검사하면서 맞았는지 확인
+        // 다맞았을때는 DoSink를 실행하면서 isAlive를 false로 바꿔줌 
+        public bool IsHit(Point point)
         {
+            bool isHitSomeWhere = false;
+            bool isHitAll = true;
+            for (int i = 0; i < Points.Length; i++)
+            {
+                if (Points[i].CompareHit(point))
+                {
+                    Points[i].IsHit = true;
+                    isHitSomeWhere = true;
+                }
+                isHitAll = isHitAll && Points[i].IsHit;
+            }
+
+            if (isHitAll)
+            {
+                DoSink();
+            }
+   
+            return isHitSomeWhere;
+        }
+
+        public void SetPoints(Point[] points)
+        {
+            Points = points;
+        }
+        
+        // 가라 앉았는지 출력해주는 판단. 콘솔로 가라 앉았습니다 출력, isAlive false 로 설정
+        private void DoSink()
+        {
+            IsAlive = false;
             Console.WriteLine("배가 가라앉았습니다 꼬르륵.....");
-            return true;
         }
     }
 }
