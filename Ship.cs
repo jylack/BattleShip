@@ -6,7 +6,7 @@ namespace BattleShip
     public enum ShipType
     {
         // 항공모함, 전함, 순양함, 잠수함, 구축함
-        Carrier,BattleShip,Cruiser,Submarine,Destroyer
+        Carrier,BattleShip,Cruiser,Submarine,Destroyer,end
     }
     
     public struct Point
