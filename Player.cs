@@ -13,7 +13,7 @@ namespace BattleShip
 
     
 
-    internal class Player
+    public class Player
     {
         string _name;
         Skills _skill;

@@ -165,10 +165,11 @@ namespace BattleShip
    
             return isHitSomeWhere;
         }
-
-        public void SetPoints(Point[] points)
+        
+        // Points는 Property로, 개별 포인트는 메서드로
+        public void SetPointByIndex(int index, Point point)
         {
-            Points = points;
+            Points[index] = point;
         }
         
         // 가라 앉았는지 출력해주는 판단. 콘솔로 가라 앉았습니다 출력, isAlive false 로 설정
