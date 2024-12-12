@@ -66,9 +66,11 @@ namespace BattleShip
 
         public void PrintField(Player player, Player cpu)
         {
-            Console.WriteLine("◁ ◀ □ ■ ▶ ▷");
-            Console.WriteLine("△ ▲ □ ■ ▼ ▽");
-            Console.WriteLine("≈ ≈ ≈ ≈ ≈ ≈");
+            Console.WriteLine("∼ ◀ □ ■ ▶ ∼ ∼ ∼");  
+            Console.WriteLine("∼ △ ∼ ∼ ∼ ∼ ♨ ∼");  
+            Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");  
+            Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");  
+            Console.WriteLine("∼ ▼ ∼ ∼ ∼ ∼ ∼ ∼ ");
         }
     }
 }
