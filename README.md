@@ -26,10 +26,10 @@
   * 가로일때는 ◁ ◀ □ ■ ▶ ▷
   * 세로일때는 △ ▲ □ ■ ▼ ▽
   * 바다 표시는 ∼, 맞았으면 ♨ / 완성형으로 가자면..?
-    * // 데모  
-  Console.WriteLine("∼ ◀ □ ■ ▶ ∼ ∼ ∼");  
-  Console.WriteLine("∼ △ ∼ ∼ ∼ ∼ ♨ ∼");  
-  Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");  
-  Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");  
-  Console.WriteLine("∼ ▼ ∼ ∼ ∼ ∼ ∼ ∼ ");  
+    * // 데모
+  Console.WriteLine("∼ ◀ □ ■ ▶ ∼ ∼ ∼");
+  Console.WriteLine("∼ △ ∼ ∼ ∼ ∼ ♨ ∼");
+  Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");
+  Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");
+  Console.WriteLine("∼ ▼ ∼ ∼ ∼ ∼ ∼ ∼ ");
   * 이런 느낌적인 느낌으로..
