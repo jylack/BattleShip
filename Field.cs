@@ -68,7 +68,7 @@ namespace BattleShip
         public void PrintField(Player player, Player cpu)
         {
             Console.WriteLine("바다를 출력할게요~");
-            
+
             // 플레이어 필드
             for (int i = 0; i < Sea.GetLength(0); i++)
             {
@@ -87,6 +87,7 @@ namespace BattleShip
                 }
                 Console.WriteLine("");
             }
+
         }
 
         // private bool IsSea(Player somePlayer, int x, int y)
@@ -97,15 +98,30 @@ namespace BattleShip
         /* 해당 x,y 값에 플레이어 배가 있는지 확인 */
         private bool IsShipOnTarget(Player somePlayer, int x, int y)
         {
-            foreach (Ship s in somePlayer.TestShips)
+            if (somePlayer.TestShips != null)
             {
-                if (s.FindPointByInt(x, y) >= 0)
+                foreach (Ship s in somePlayer.TestShips)
                 {
-                    return true;
+                    if (s.FindPointByInt(x, y) >= 0)
+                    {
+                        return true;
+                    }
                 }
             }
+            
 
             return false;
+
+            //원본코드
+            //foreach (Ship s in somePlayer.TestShips)
+            //{
+            //    if (s.FindPointByInt(x, y) >= 0)
+            //    {
+            //        return true;
+            //    }
+            //}
+
+            //return false;
         }
 
         // 바다에 쐈을 경우 프린트

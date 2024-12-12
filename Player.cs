@@ -11,7 +11,7 @@ namespace BattleShip
         start, end
     }
 
-    
+
 
     public class Player
     {
@@ -19,6 +19,7 @@ namespace BattleShip
         Skills _skill;
         Ship[] _ships;
         Field _field;
+        ConsoleKeyInfo inputKey;
 
         //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
         public void InitPlayer()
@@ -31,8 +32,13 @@ namespace BattleShip
                 _ships[i] = new Ship((ShipType)i);
             }
 
-            Console.Write("사용하실 닉네임을 정해주세요 : ");
-            _name = Console.ReadLine();
+            //Console.Write("사용하실 닉네임을 정해주세요 : ");
+            //_name = Console.ReadLine();
+        }
+        public Ship[] Ships
+        {
+            get { return _ships; }
+            set { _ships = value; }
         }
 
         /* To-Do : 쉽 정보 테스트 용으로 세팅, 불필요시 삭제 필요*/
@@ -52,7 +58,41 @@ namespace BattleShip
         //배들 위치배정
         public void PlaceShip()
         {
+            int selectShipIndex = 0;
 
+            Point curSur = new Point(0, 0);
+
+            while (true)
+            {
+                switch (inputKey.Key)
+                {
+                    case ConsoleKey.A:
+                        curSur.PosY -= 1;
+                        break;
+                    case ConsoleKey.S:
+                        curSur.PosY += 1;
+
+                        break;
+                    case ConsoleKey.D:
+                        curSur.PosY += 1;
+
+                        break;
+                    case ConsoleKey.W:
+                        curSur.PosY -= 1;
+
+                        break;
+                    default:
+                        break;
+                }
+
+
+                while (_ships.Length > selectShipIndex)
+                {
+                    _ships[selectShipIndex].SetPointByIndex(_ships[selectShipIndex].Size, new Point(curSur.PosX, curSur.PosY));
+
+                }
+
+            }
         }
 
         //랜덤으로 배들 놓기

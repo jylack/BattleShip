@@ -10,6 +10,9 @@ namespace BattleShip
     {
         Player player = new Player();
         Player cpu = new Player();
+        Field field = new Field();
+        Ship[] ships = new Ship[(int)ShipType.end];
+
         string[] logo = { "--------------------------------------------------------------------------------------------------",
 "--------------------------------------------------------------------------------------------------" ,
 "--=%%%%%%%%*--=#%%%%%*+%%%%%%@%*%%%%%%%%#%%%@=---*@%%%%@#=+%%%%%%%*=#%%%%+%@%%+#%%%#+%%%%%%%#+----" ,
@@ -23,17 +26,28 @@ namespace BattleShip
 "===+*******=-=***+==+**+=+++++---=++++===+++++++==+++++++==+++++++==++++++++++=+**+=+***+=====----" ,
 "---=--=--------==-----=====-=--=====================-===---===-=========-==----=====-----==-------" };
 
+        public bool isGamePlay = true;
+
+
         //플레이어,cpu 생성 , 시작화면 생성
         public void InitGame()
         {
-            //player.InitPlayer();
-            //cpu.InitPlayer();
+            LogoPrint();
+
+
+            player.InitPlayer();
+            cpu.InitPlayer();
             //cpu.PlaceRandomShips();
 
-            for (int i = 0; i < logo.Length; i++)
+            //배들 종류별로 하나씩 다넣음.
+            for (int i = 0; i < ships.Length; i++)
             {
-                Console.WriteLine(logo[i]);
+                ships[i] = new Ship((ShipType)i);
             }
+
+            //생성된것 하나씩 다 넣음
+            player.Ships = ships;
+            cpu.Ships = ships;
 
 
         }
@@ -42,12 +56,22 @@ namespace BattleShip
         public void UpdateGame()
         {
             player.PlaceShip();
+            field.PrintField(player, cpu);
         }
 
         //게임도중 조건이되어 끝났을떄 게임 승패 표기
         public void EndGame()
         {
+            Console.WriteLine("EndGame");
+        }
 
+        public void LogoPrint()
+        {
+            //로고 생성후 프린트해주기.
+            for (int i = 0; i < logo.Length; i++)
+            {
+                Console.WriteLine(logo[i]);
+            }
         }
     }
 }
