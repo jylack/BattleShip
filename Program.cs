@@ -12,6 +12,10 @@ namespace BattleShip
         {
             GameManager gameManager = new GameManager();
             gameManager.InitGame();
+            
+            // TestCode
+            Field field = new Field();
+            field.PrintField(null, null);
         }
     }
 }
