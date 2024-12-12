@@ -62,8 +62,7 @@ namespace BattleShip
 
             Point curSur = new Point(0, 0);
 
-            while (true)
-            {
+       
                 switch (inputKey.Key)
                 {
                     case ConsoleKey.A:
@@ -85,14 +84,18 @@ namespace BattleShip
                         break;
                 }
 
+                _ships[selectShipIndex].SetPointByIndex(0, new Point(0, 0));
+                _ships[selectShipIndex].SetPointByIndex(1, new Point(0, 1));
+                _ships[selectShipIndex].SetPointByIndex(2, new Point(0, 2));
+                _ships[selectShipIndex].SetPointByIndex(3, new Point(0, 3));
+                _ships[selectShipIndex].SetPointByIndex(4, new Point(0, 4));
+                //while (_ships.Length > selectShipIndex)
+                //{
+                //    _ships[selectShipIndex].SetPointByIndex(_ships[selectShipIndex].Size, new Point(curSur.PosX, curSur.PosY));
 
-                while (_ships.Length > selectShipIndex)
-                {
-                    _ships[selectShipIndex].SetPointByIndex(_ships[selectShipIndex].Size, new Point(curSur.PosX, curSur.PosY));
+                //}
 
-                }
-
-            }
+            
         }
 
         //랜덤으로 배들 놓기

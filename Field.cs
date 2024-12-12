@@ -98,9 +98,9 @@ namespace BattleShip
         /* 해당 x,y 값에 플레이어 배가 있는지 확인 */
         private bool IsShipOnTarget(Player somePlayer, int x, int y)
         {
-            if (somePlayer.TestShips != null)
+            if (somePlayer.Ships != null)
             {
-                foreach (Ship s in somePlayer.TestShips)
+                foreach (Ship s in somePlayer.Ships)
                 {
                     if (s.FindPointByInt(x, y) >= 0)
                     {
@@ -140,7 +140,7 @@ namespace BattleShip
         // 배의 상태 프린트
         private void PrintShip(Player player, int x, int y)
         {
-            foreach(Ship s in player.TestShips)
+            foreach(Ship s in player.Ships)
             {
                 int i = s.FindPointByInt(x, y);
                 if (i == -1)

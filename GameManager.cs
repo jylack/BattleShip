@@ -57,6 +57,7 @@ namespace BattleShip
         {
             player.PlaceShip();
             field.PrintField(player, cpu);
+            Console.ReadLine();
         }
 
         //게임도중 조건이되어 끝났을떄 게임 승패 표기
