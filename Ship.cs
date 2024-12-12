@@ -15,6 +15,14 @@ namespace BattleShip
         private int _y;
         private bool _isHit;
 
+        // x,y 로 쉽게 세팅할수 있도록 선언
+        public Point(int x, int y)
+        {
+            _x = x;
+            _y = y;
+            _isHit = false;
+        }
+        
         public int PosX
         {
             get { return _x; }
@@ -32,7 +40,6 @@ namespace BattleShip
             get { return _isHit; }
             set { _isHit = value; }
         }
-
         
         // 두개 앤드 비교해서 맞았는지
         public bool CompareHit(Point point)
@@ -41,6 +48,7 @@ namespace BattleShip
         }
     }
     
+    /* 기능은 안다를거 같긴 한데, 시간나면 Ship 부모로 만드는걸로.. */
     public class Ship
     {
         private ShipType _type;
@@ -106,29 +114,25 @@ namespace BattleShip
                 case ShipType.Carrier:
                     Name = "항공모함";
                     Size = 5;
-                    IsAlive = true;                    
                     break;
                 case ShipType.BattleShip:
                     Name = "전함";
                     Size = 4;
-                    IsAlive = true;                            
                     break;
                 case ShipType.Cruiser:
                     Name = "순양함";
                     Size = 3;
-                    IsAlive = true;
                     break;
                 case ShipType.Submarine:
                     Name = "잠수함";
                     Size = 3;
-                    IsAlive = true;                    
                     break;
                 case ShipType.Destroyer:
                     Name = "경비정";
                     Size = 2;
-                    IsAlive = true;                    
                     break;
             }
+            IsAlive = true;                            
             Type = type;
             Points = new Point[Size];
         }
@@ -172,11 +176,52 @@ namespace BattleShip
             Points[index] = point;
         }
         
+        // x,y를 받아서 내 배의 좌표가 있는 인덱스를 반환 확인
+        public int FindPointByInt(int x, int y)
+        {
+            for (int i = 0; i < Points.Length; i++)
+            {
+                if (Points[i].PosX == x && Points[i].PosY == y)
+                {
+                    return i;
+                }                
+            }
+            return -1;
+        }
+        
         // 가라 앉았는지 출력해주는 판단. 콘솔로 가라 앉았습니다 출력, isAlive false 로 설정
         private void DoSink()
         {
             IsAlive = false;
             Console.WriteLine("배가 가라앉았습니다 꼬르륵.....");
+        }
+
+        // 1칸 짜리 배는 false로 반환, 0번째 지점과 1번째 지점의 X값이 같으면 가로형
+        public bool IsHorizontal()
+        {
+            if (Points.Length < 2)
+            {
+                return false;
+            }
+
+            int x1 = Points[0].PosX;
+            int x2 = Points[1].PosX;
+
+            return x1 == x2;
+        }
+
+        // 1칸 짜리 배는 false로 반환, 0번째 지점과 1번째 지점의 Y값이 같으면 세로형
+        public bool IsVertical()
+        {
+            if (Points.Length < 2)
+            {
+                return false;
+            }
+
+            int y1 = Points[0].PosY;
+            int y2 = Points[1].PosY;
+
+            return y1 == y2;
         }
     }
 }

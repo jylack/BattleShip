@@ -35,6 +35,13 @@ namespace BattleShip
             _name = Console.ReadLine();
         }
 
+        /* To-Do : 쉽 정보 테스트 용으로 세팅, 불필요시 삭제 필요*/
+        public Ship[] TestShips
+        {
+            get;
+            set;
+        }
+
         //왠지 필요없을거같아 일단 주석해둠.
         ////초기에 배들 배열에 배들넣기.?
         //public void InitShip()

@@ -46,7 +46,6 @@ namespace BattleShip
 
             // 필드가 미사일을 맞음
             Sea[x, y] = true;
-
             return true;
         }
 
@@ -64,13 +63,129 @@ namespace BattleShip
             return false;
         }
 
+        // 1. 바다는 bool sea로 본다.
+        // 2. 플레이어의 배가 있으면 배를 프린트한다.
         public void PrintField(Player player, Player cpu)
         {
-            Console.WriteLine("∼ ◀ □ ■ ▶ ∼ ∼ ∼");  
-            Console.WriteLine("∼ △ ∼ ∼ ∼ ∼ ♨ ∼");  
-            Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");  
-            Console.WriteLine("∼ □ ∼ ∼ ∼ ∼ ∼ ∼");  
-            Console.WriteLine("∼ ▼ ∼ ∼ ∼ ∼ ∼ ∼ ");
+            Console.WriteLine("바다를 출력할게요~");
+            
+            // 플레이어 필드
+            for (int i = 0; i < Sea.GetLength(0); i++)
+            {
+                for (int j = 0; j < Sea.GetLength(1); j++)
+                {
+                    // 해당 좌표에 배가 있을때
+                    if (IsShipOnTarget(player, i, j))
+                    {
+                        PrintShip(player, i, j);
+                    }
+                    else
+                    {
+                        PrintSea(Sea[i, j]);
+                    }
+                    Console.Write(" ");
+                }
+                Console.WriteLine("");
+            }
+        }
+
+        // private bool IsSea(Player somePlayer, int x, int y)
+        // {
+        //     bool[,];
+        // }
+        
+        /* 해당 x,y 값에 플레이어 배가 있는지 확인 */
+        private bool IsShipOnTarget(Player somePlayer, int x, int y)
+        {
+            foreach (Ship s in somePlayer.TestShips)
+            {
+                if (s.FindPointByInt(x, y) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // 바다에 쐈을 경우 프린트
+        private void PrintSea(bool isSeaHit)
+        {
+            if (isSeaHit)
+            {
+                Console.Write("♨");
+            }
+            else
+            {
+                Console.Write("∼");
+            }            
+        }
+
+        // 배의 상태 프린트
+        private void PrintShip(Player player, int x, int y)
+        {
+            foreach(Ship s in player.TestShips)
+            {
+                int i = s.FindPointByInt(x, y);
+                if (i == -1)
+                {
+                    continue;
+                }
+                bool isHead = (i == 0);
+                bool isTail = (i == s.Points.Length - 1);
+                bool isBody = (!isHead && !isTail);
+                
+                if (isHead && s.IsHorizontal() && s.Points[i].IsHit)
+                {
+                    Console.Write("◀");
+                }
+
+                if (isHead && s.IsHorizontal() && s.Points[i].IsHit == false)
+                {
+                    Console.Write("◁");
+                }
+
+                if (isTail && s.IsHorizontal() && s.Points[i].IsHit)
+                {
+                    Console.Write("▶");   
+                }
+
+                if (isTail && s.IsHorizontal() && s.Points[i].IsHit == false)
+                {
+                    Console.Write("▷");
+                }
+
+                if (isBody && s.Points[i].IsHit)
+                {
+                    Console.Write("■");
+                }
+                
+                if (isBody && s.Points[i].IsHit == false)
+                {
+                    Console.Write("□");
+                }
+                
+                if (isHead && s.IsVertical() && s.Points[i].IsHit)
+                {
+                    Console.Write("▲");
+                }
+
+                if (isHead && s.IsVertical() && s.Points[i].IsHit == false)
+                {
+                    Console.Write("△");
+                }
+
+                if (isTail && s.IsVertical() && s.Points[i].IsHit)
+                {
+                    Console.Write("▼");   
+                }
+
+                if (isTail && s.IsVertical() && s.Points[i].IsHit == false)
+                {
+                    Console.Write("▽");
+                }                
+                
+            }
         }
     }
 }
