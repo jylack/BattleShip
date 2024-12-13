@@ -13,6 +13,7 @@ namespace BattleShip
         Field field = new Field();
         Ship[] ships = new Ship[(int)ShipType.end];
 
+        Point curSur = new Point(0, 0);
 
         ConsoleKeyInfo inputKey;
 
@@ -52,47 +53,56 @@ namespace BattleShip
             player.Ships = ships;
             cpu.Ships = ships;
 
+            player.PlaceShip();
 
         }
 
         //턴 반복되는동안 수행 여기서 좌표입력받고 cpu가 공격하고 실행함.
         public void UpdateGame()
         {
-            player.PlaceShip();
             field.PrintField(player, cpu);
-            Console.ReadLine();
+            inputKey = Console.ReadKey(true);
+            ShipPointUpdate(inputKey);
+
+
         }
 
         public void ShipPointUpdate(ConsoleKeyInfo key)
         {
             int selectShipIndex = 0;
-
-            Point curSur = new Point(0, 0);
-
-
+            Point selectPoint = new Point();
 
             switch (key.Key)
             {
                 case ConsoleKey.A:
-                    curSur.PosY -= 1;
+                    if (curSur.PosY - 1 > 0)
+                    {
+                        curSur.PosY -= 1;
+                    }
                     break;
                 case ConsoleKey.S:
-                    curSur.PosY += 1;
-
+                    if (curSur.PosX + 1 < field.Sea.GetLength(1))
+                    {
+                        curSur.PosX += 1;
+                    }
                     break;
                 case ConsoleKey.D:
-                    curSur.PosY += 1;
-
+                    if (curSur.PosY + 1 < field.Sea.GetLength(0))
+                    {
+                        curSur.PosY += 1;
+                    }
                     break;
                 case ConsoleKey.W:
-                    curSur.PosY -= 1;
+                    if (curSur.PosX - 1 > 0)
+                    {
+                        curSur.PosX -= 1;
+                    }
 
                     break;
                 default:
                     break;
             }
 
-            Point selectPoint = new Point();
             selectPoint =
                 new Point(player.Ships[selectShipIndex].Points[0].PosX + curSur.PosX,
                 player.Ships[selectShipIndex].Points[0].PosY + curSur.PosY);
@@ -101,10 +111,20 @@ namespace BattleShip
             //쉽 사이즈 만큼이동
             //쉽사이즈 만큼 기준점을 기준으로 더 해줌
             for (int i = 0; i < player.Ships[i].Size; i++)
-            {                
-                player.Ships[selectShipIndex].
-                    SetPointByIndex(selectShipIndex, selectPoint);
+            {
+
+                selectPoint = new Point(player.Ships[selectShipIndex].Points[i].PosX + curSur.PosX, player.Ships[selectShipIndex].Points[i].PosY + curSur.PosY);
+
+                //player.Ships[selectShipIndex].SetPointByIndex(selectShipIndex, curSur);
+
+                player.Ships[selectShipIndex].SetPointByIndex(selectShipIndex, new Point(selectPoint.PosX, selectPoint.PosY));
+
+
             }
+
+            Console.WriteLine($"x{selectPoint.PosX} : y{selectPoint.PosY}");
+
+            Console.WriteLine($"x{curSur.PosX} : y{curSur.PosY}");
 
 
         }
