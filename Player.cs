@@ -20,7 +20,7 @@ namespace BattleShip
         Skills _skill;
         Ship[] _ships;
         Field _myField;
-        ConsoleKeyInfo inputKey;
+        
 
         //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
         public void InitPlayer()
@@ -34,8 +34,8 @@ namespace BattleShip
                 _ships[i] = new Ship((ShipType)i);
             }
 
-            //Console.Write("사용하실 닉네임을 정해주세요 : ");
-            //_name = Console.ReadLine();
+            //배들 기본 위치배정 왼쪽 위로 정렬
+            PlaceShip();
         }
         public Ship[] Ships
         {
@@ -71,8 +71,11 @@ namespace BattleShip
             }
 
         }
+
+        //전체멥에서 해당위치에 배가있슴?
         public bool FindShip(int x, int y)
         {
+            //모든 배의 블럭갯수
             int maxShipBlock = 0;
 
             for (int i = 0; i < _ships.Length; i++)
@@ -83,6 +86,7 @@ namespace BattleShip
                 }
             }
 
+            //모든 배의 좌표값 모음
             Point[] allPoints = new Point[maxShipBlock];
 
 
@@ -115,7 +119,7 @@ namespace BattleShip
         public void PlaceRandomShips()
         {
 
-            PlaceShip();
+            //PlaceShip();
 
             Random rnd = new Random();
 
@@ -137,8 +141,9 @@ namespace BattleShip
                 
                 if (_ships[i].isHorizontal)// 현재 배는 가로
                 {
+                    
                     point[0].PosX = rndPointX.Next(_myField.Sea.GetLength(0));
-                    point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(0) - _ships[i].Size); //필드 최대길이에서 배 사이즈만큼 이미 뻈음.
+                    point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(1) - _ships[i].Size); //필드 최대길이에서 배 사이즈만큼 이미 뻈음.
 
                     if (FindShip(point[0].PosX, point[0].PosY) == false) // 지정된 좌표에 배가 없다면
                     {
@@ -153,7 +158,7 @@ namespace BattleShip
                 else //세로
                 {
                     point[0].PosX = rndPointX.Next(_myField.Sea.GetLength(0) - _ships[i].Size);//필드 최대길이에서 배 사이즈만큼 이미 뻈음.
-                    point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(0) );
+                    point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(1) );
 
                     if (FindShip(point[0].PosX, point[0].PosY) == false) // 지정된 좌표에 배가 없다면
                     {
