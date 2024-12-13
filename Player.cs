@@ -25,6 +25,7 @@ namespace BattleShip
         public void InitPlayer()
         {
             _myField = new Field();
+
             _ships = new Ship[(int)ShipType.end];
 
             for (int i = 0; i < (int)ShipType.end; i++)

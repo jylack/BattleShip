@@ -11,7 +11,7 @@ namespace BattleShip
         Player player = new Player();
         Player cpu = new Player();
         Field field = new Field();
-        Ship[] ships = new Ship[(int)ShipType.end];
+       // Ship[] ships = new Ship[(int)ShipType.end];
 
         Point curSur = new Point(0, 0);
 
@@ -44,14 +44,14 @@ namespace BattleShip
             //cpu.PlaceRandomShips();
 
             //배들 종류별로 하나씩 다넣음.
-            for (int i = 0; i < ships.Length; i++)
-            {
-                ships[i] = new Ship((ShipType)i);
-            }
+            //for (int i = 0; i < ships.Length; i++)
+            //{
+            //    ships[i] = new Ship((ShipType)i);
+            //}
 
-            //생성된것 하나씩 다 넣음
-            player.Ships = ships;
-            cpu.Ships = ships;
+            ////생성된것 하나씩 다 넣음
+            //player.Ships = ships;
+            //cpu.Ships = ships;
 
             player.PlaceShip();
 
@@ -75,25 +75,25 @@ namespace BattleShip
             switch (key.Key)
             {
                 case ConsoleKey.A:
-                    if (curSur.PosY - 1 > 0)
+                    if (curSur.PosY - 1 >= 0)
                     {
                         curSur.PosY -= 1;
                     }
                     break;
                 case ConsoleKey.S:
-                    if (curSur.PosX + 1 < field.Sea.GetLength(1))
+                    if (curSur.PosX + 1 <= field.Sea.GetLength(1) - player.Ships[selectShipIndex].Size)
                     {
                         curSur.PosX += 1;
                     }
                     break;
                 case ConsoleKey.D:
-                    if (curSur.PosY + 1 < field.Sea.GetLength(0))
+                    if (curSur.PosY + 1 < field.Sea.GetLength(0) )
                     {
                         curSur.PosY += 1;
                     }
                     break;
                 case ConsoleKey.W:
-                    if (curSur.PosX - 1 > 0)
+                    if (curSur.PosX - 1 >= 0)
                     {
                         curSur.PosX -= 1;
                     }
@@ -110,16 +110,16 @@ namespace BattleShip
 
             //쉽 사이즈 만큼이동
             //쉽사이즈 만큼 기준점을 기준으로 더 해줌
-            for (int i = 0; i < player.Ships[i].Size; i++)
+            for (int i = 0; i < player.Ships[selectShipIndex].Size; i++)
             {
 
-                selectPoint = new Point(player.Ships[selectShipIndex].Points[i].PosX + curSur.PosX, player.Ships[selectShipIndex].Points[i].PosY + curSur.PosY);
+                //selectPoint = new Point(player.Ships[selectShipIndex].Points[i].PosX + curSur.PosX, player.Ships[selectShipIndex].Points[i].PosY + curSur.PosY);
 
                 //player.Ships[selectShipIndex].SetPointByIndex(selectShipIndex, curSur);
 
-                player.Ships[selectShipIndex].SetPointByIndex(selectShipIndex, new Point(selectPoint.PosX, selectPoint.PosY));
+                player.Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX+i, curSur.PosY ));
 
-
+                
             }
 
             Console.WriteLine($"x{selectPoint.PosX} : y{selectPoint.PosY}");
