@@ -150,7 +150,8 @@ namespace BattleShip
 
         private void printXIndex(Player player, Player cpu)
         {
-            string indexStr = "⓪①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⓏⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
+            // 0번 깨져서 어쩔수없다
+            string indexStr = "ⓞ①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⓏⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
             string playerXIndex = indexStr.Substring(0, player.Field.Sea.GetLength(1));
             string cpuXIndex = indexStr.Substring(0, cpu.Field.Sea.GetLength(1));
             Console.WriteLine("/" + playerXIndex + "\t/" + cpuXIndex);
