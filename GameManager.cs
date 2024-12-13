@@ -144,9 +144,3 @@ namespace BattleShip
     }
 }
 
-
-/*
-
- 
- 
- */
