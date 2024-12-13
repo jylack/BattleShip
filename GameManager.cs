@@ -50,9 +50,7 @@ namespace BattleShip
         //턴 반복되는동안 수행 여기서 좌표입력받고 cpu가 공격하고 실행함.
         public void UpdateGame()
         {
-            //Console.Clear();
-
-            field.PrintField(player, cpu);
+            Field.PrintField(player, cpu);
             inputKey = Console.ReadKey(true);
             ShipPointUpdate(inputKey);
 

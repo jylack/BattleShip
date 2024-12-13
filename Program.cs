@@ -31,13 +31,13 @@ namespace BattleShip
             player.Name = "내이름";
             player.Ships = new Ship[0];
             Player cpu = new Player();
-            Field cpuField = new Field(30);
+            Field cpuField = new Field(20);
             cpu.Field = cpuField;
             cpu.Ships = new Ship[0];
             cpu.Name = "알파고";
             
             // 비어있는 바다 출력
-            player.Field.PrintField(player, cpu);
+            Field.PrintField(player, cpu);
             
             //// 임의의 배 2개만 세팅
             //// Cpu 는 하나만...
@@ -61,8 +61,7 @@ namespace BattleShip
             battleShip.SetPointByIndex(3, new Point(4,1));
             cpu.Ships = new[] { battleShip };
             
-            // 처음 세팅후 출력
-            player.Field.PrintField(player, cpu);
+            Field.PrintField(player, cpu);
 
             // 피격시 출력 테스트
             player.Field.Sea[0,9] = true;
@@ -76,8 +75,8 @@ namespace BattleShip
             cpu.Ships[0].Points[0].IsHit = true;
             cpu.Ships[0].Points[1].IsHit = true;
             
-            player.Field.PrintField(player, cpu);        
-            
+            Field.PrintField(player, cpu);
+
             // player.Field.PrintField(player, cpu)가 너무 보기 안좋다..
             // 좀더 예쁘게 짜보려면..?
             // 1. Field.PrintField(player, cpu)
