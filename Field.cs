@@ -71,83 +71,77 @@ namespace BattleShip
             {
                 return true;
             }
-            
             return false;
         }
 
-        public void PrintFieldName(Player player, Player cpu)
+        public void PrintFieldName(Player player, int needToSpace)
         {
-            // y열의 좌표 길이 +1 (+ 띄어쓰기)
-            int cpuNamePos = player.Field.Sea.GetLength(1);
+            Console.SetCursorPosition(needToSpace, 0);
+            // 띄어쓸 공간 필요하면, 탭추가
+            if (needToSpace > 0)
+            {
+                Console.Write("\t");
+            }
             Console.Write(player.Name);
-            // y열의 갯수 체크해서 가운데에 이름 출력해주기
-            Console.SetCursorPosition(cpuNamePos, Console.CursorTop);
-            Console.Write("\t"+cpu.Name);
             Console.WriteLine();
         }
 
-        // 1. 바다는 bool sea로 본다.
-        // 2. 플레이어의 배가 있으면 배를 프린트한다.
-        public void PrintField(Player player, Player cpu)
+        // 기존 코드 리팩토링
+        public static void PrintField(Player player, Player cpu)
         {
-            Console.WriteLine();
-            bool[,] playerSea = player.Field.Sea;
-            bool[,] opponentSea = cpu.Field.Sea;
-
-            // 필드의 이름 출력
-            PrintFieldName(player, cpu);
-
+            Console.Clear();
+            player.Field.PrintField(player, 0);
+            cpu.Field.PrintField(cpu, player.Field.Sea.GetLength(1)+1);     
+            Console.WriteLine("");
+        }
+        
+        // 깔끔버전!?
+        // needToSpace 인자값이 0이면, 왼쪽부터 아니면 쭉 그려줌
+        public void PrintField(Player somePlayer, int needToSpace)
+        {
+            // 편하게 변수선언
+            bool[,] playerSea = somePlayer.Field.Sea;
+            PrintFieldName(somePlayer, needToSpace);
             
             for (int i = 0; i < playerSea.GetLength(0); i++)
             {
-                PrintYIndex(i);
-                // 플레이어 필드
+                // 0보다 크면 뭔가 띄워서 다른 필드 출력하는것
+                Console.SetCursorPosition(needToSpace, i+1);
+                PrintYIndex(i, needToSpace);
+                
                 for (int j = 0; j < playerSea.GetLength(1); j++)
                 {
                     // 해당 좌표에 배가 있을때
-                    if (IsShipOnTarget(player, i, j))
+                    if (IsShipOnTarget(somePlayer, i, j))
                     {
-                        PrintShip(player, i, j);
+                        PrintShip(somePlayer, i, j);
                     }
                     else
                     {
                         PrintSea(playerSea[i, j]);
                     }
-                    Console.Write("");
                 }
-                
-                Console.Write("\t");
-                PrintYIndex(i);
-                
-                // CPU 필드
-                for (int j = 0; j < opponentSea.GetLength(1); j++)
-                {
-                    // 해당 좌표에 배가 있을때
-                    if (IsShipOnTarget(cpu, i, j))
-                    {
-                        PrintShip(cpu, i, j);
-                    }
-                    else
-                    {
-                        PrintSea(opponentSea[i, j]);
-                    }
-                    Console.Write("");
-                }                
-                Console.WriteLine("");
-                
                 // X인덱스 출력
                 if (i == playerSea.GetLength(0) - 1)
                 {
-                    printXIndex(player, cpu);
+                    printXIndex(somePlayer, needToSpace, i);
                 }
-            }
+            }            
         }
-
-        // private bool IsSea(Player somePlayer, int x, int y)
-        // {
-        //     bool[,];
-        // }
-
+        
+        private void printXIndex(Player player, int needToSpace, int i)
+        {
+            // 0번 깨져서 어쩔수없다
+            string indexStr = "ⓞ①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
+            string playerXIndex = indexStr.Substring(0, player.Field.Sea.GetLength(1));
+            Console.SetCursorPosition(needToSpace, i+2);
+            if (needToSpace > 0)
+            {
+                Console.Write("\t");
+            }            
+            Console.Write("/"+playerXIndex);
+        }
+        
         private void printXIndex(Player player, Player cpu)
         {
             // 0번 깨져서 어쩔수없다
@@ -156,8 +150,14 @@ namespace BattleShip
             string cpuXIndex = indexStr.Substring(0, cpu.Field.Sea.GetLength(1));
             Console.WriteLine("/" + playerXIndex + "\t/" + cpuXIndex);
         }
-        private void PrintYIndex(int loop)
+
+        private void PrintYIndex(int loop, int needToSpace)
         {
+            if (needToSpace > 0)
+            {
+                Console.Write("\t");                
+            }            
+            
             if (loop < 10)
             {
                 Console.Write(loop);                
@@ -191,7 +191,9 @@ namespace BattleShip
         {
             if (isSeaHit)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("♨");
+                Console.ResetColor();
             }
             else
             {
@@ -199,7 +201,7 @@ namespace BattleShip
             }            
         }
 
-        // 배의 상태 프린트
+        // 배의 상태 프린트, 이중포문 버전
         private void PrintShip(Player player, int x, int y)
         {
             foreach(Ship s in player.Ships)
@@ -210,9 +212,15 @@ namespace BattleShip
                 bool isHead = (i == 0);
                 bool isTail = (i == s.Points.Length - 1);
                 bool isBody = (!isHead && !isTail);
+
+                if (s.Points[i].IsHit)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
                 
                 if (isHead && s.IsHorizontal() && s.Points[i].IsHit)
                 {
+
                     Console.Write("◀");
                 }
 
@@ -259,6 +267,11 @@ namespace BattleShip
                 if (isTail && s.IsVertical() && s.Points[i].IsHit == false)
                 {
                     Console.Write("▽");
+                }
+                
+                if (s.Points[i].IsHit)
+                {
+                    Console.ResetColor();
                 }                
             }
         }
