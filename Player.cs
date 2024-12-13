@@ -42,6 +42,7 @@ namespace BattleShip
             set { _ships = value; }
         }
 
+        /* 프로퍼티 아래 두개 불필요하면 나중에 삭제 */
         public Field Field
         {
             get { return _myField; }
@@ -51,7 +52,9 @@ namespace BattleShip
         public string Name
         {
             get { return _name; }
+            set { _name = value; }
         }
+        /* 여기까지 */
 
         //배들 위치배정
         public void PlaceShip()
