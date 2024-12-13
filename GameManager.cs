@@ -13,6 +13,9 @@ namespace BattleShip
         Field field = new Field();
         Ship[] ships = new Ship[(int)ShipType.end];
 
+
+        ConsoleKeyInfo inputKey;
+
         string[] logo = { "--------------------------------------------------------------------------------------------------",
 "--------------------------------------------------------------------------------------------------" ,
 "--=%%%%%%%%*--=#%%%%%*+%%%%%%@%*%%%%%%%%#%%%@=---*@%%%%@#=+%%%%%%%*=#%%%%+%@%%+#%%%#+%%%%%%%#+----" ,
@@ -58,6 +61,52 @@ namespace BattleShip
             player.PlaceShip();
             field.PrintField(player, cpu);
             Console.ReadLine();
+        }
+
+        public void ShipPointUpdate(ConsoleKeyInfo key)
+        {
+            int selectShipIndex = 0;
+
+            Point curSur = new Point(0, 0);
+
+
+
+            switch (key.Key)
+            {
+                case ConsoleKey.A:
+                    curSur.PosY -= 1;
+                    break;
+                case ConsoleKey.S:
+                    curSur.PosY += 1;
+
+                    break;
+                case ConsoleKey.D:
+                    curSur.PosY += 1;
+
+                    break;
+                case ConsoleKey.W:
+                    curSur.PosY -= 1;
+
+                    break;
+                default:
+                    break;
+            }
+
+            Point selectPoint = new Point();
+            selectPoint =
+                new Point(player.Ships[selectShipIndex].Points[0].PosX + curSur.PosX,
+                player.Ships[selectShipIndex].Points[0].PosY + curSur.PosY);
+
+
+            //쉽 사이즈 만큼이동
+            //쉽사이즈 만큼 기준점을 기준으로 더 해줌
+            for (int i = 0; i < player.Ships[i].Size; i++)
+            {                
+                player.Ships[selectShipIndex].
+                    SetPointByIndex(selectShipIndex, selectPoint);
+            }
+
+
         }
 
         //게임도중 조건이되어 끝났을떄 게임 승패 표기

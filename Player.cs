@@ -18,13 +18,13 @@ namespace BattleShip
         string _name;
         Skills _skill;
         Ship[] _ships;
-        Field _field;
+        Field _myField;
         ConsoleKeyInfo inputKey;
 
         //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
         public void InitPlayer()
         {
-            _field = new Field();
+            _myField = new Field();
             _ships = new Ship[(int)ShipType.end];
 
             for (int i = 0; i < (int)ShipType.end; i++)
@@ -41,61 +41,27 @@ namespace BattleShip
             set { _ships = value; }
         }
 
-        /* To-Do : 쉽 정보 테스트 용으로 세팅, 불필요시 삭제 필요*/
-        public Ship[] TestShips
-        {
-            get;
-            set;
-        }
 
-        //왠지 필요없을거같아 일단 주석해둠.
-        ////초기에 배들 배열에 배들넣기.?
-        //public void InitShip()
-        //{
-
-        //}
 
         //배들 위치배정
         public void PlaceShip()
         {
-            int selectShipIndex = 0;
 
-            Point curSur = new Point(0, 0);
+            //_ships[selectShipIndex].SetPointByIndex(0, new Point(0, 0));
+            //_ships[selectShipIndex].SetPointByIndex(1, new Point(0, 1));
+            //_ships[selectShipIndex].SetPointByIndex(2, new Point(0, 2));
+            //_ships[selectShipIndex].SetPointByIndex(3, new Point(0, 3));
+            //_ships[selectShipIndex].SetPointByIndex(4, new Point(0, 4));
 
-       
-                switch (inputKey.Key)
+            //왼쪽위부터 일렬로 하나씩 배정. 나중에 선택해서 하기전에 좌표지정해준거임.
+            for (int i = 0; i < _ships.Length; i++)
+            {
+                for (int j = 0; j < _ships[i].Size; j++)
                 {
-                    case ConsoleKey.A:
-                        curSur.PosY -= 1;
-                        break;
-                    case ConsoleKey.S:
-                        curSur.PosY += 1;
-
-                        break;
-                    case ConsoleKey.D:
-                        curSur.PosY += 1;
-
-                        break;
-                    case ConsoleKey.W:
-                        curSur.PosY -= 1;
-
-                        break;
-                    default:
-                        break;
+                    _ships[i].SetPointByIndex(j, new Point(j, i));
                 }
+            }
 
-                _ships[selectShipIndex].SetPointByIndex(0, new Point(0, 0));
-                _ships[selectShipIndex].SetPointByIndex(1, new Point(0, 1));
-                _ships[selectShipIndex].SetPointByIndex(2, new Point(0, 2));
-                _ships[selectShipIndex].SetPointByIndex(3, new Point(0, 3));
-                _ships[selectShipIndex].SetPointByIndex(4, new Point(0, 4));
-                //while (_ships.Length > selectShipIndex)
-                //{
-                //    _ships[selectShipIndex].SetPointByIndex(_ships[selectShipIndex].Size, new Point(curSur.PosX, curSur.PosY));
-
-                //}
-
-            
         }
 
         //랜덤으로 배들 놓기
