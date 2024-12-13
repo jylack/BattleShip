@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace BattleShip
         public Field Field
         {
             get { return _myField; }
-            set { _myField = value; }            
+            set { _myField = value; }
         }
 
         public string Name
@@ -56,15 +57,9 @@ namespace BattleShip
         }
         /* 여기까지 */
 
-        //배들 위치배정
+        //배들 기본 위치배정
         public void PlaceShip()
         {
-
-            //_ships[selectShipIndex].SetPointByIndex(0, new Point(0, 0));
-            //_ships[selectShipIndex].SetPointByIndex(1, new Point(0, 1));
-            //_ships[selectShipIndex].SetPointByIndex(2, new Point(0, 2));
-            //_ships[selectShipIndex].SetPointByIndex(3, new Point(0, 3));
-            //_ships[selectShipIndex].SetPointByIndex(4, new Point(0, 4));
 
             //왼쪽위부터 일렬로 하나씩 배정. 나중에 선택해서 하기전에 좌표지정해준거임.
             for (int i = 0; i < _ships.Length; i++)
@@ -76,11 +71,193 @@ namespace BattleShip
             }
 
         }
+        public bool FindShip(int x, int y)
+        {
+            int maxShipBlock = 0;
+
+            for (int i = 0; i < _ships.Length; i++)
+            {
+                for (int j = 0; j < _ships[i].Size; j++)
+                {
+                    maxShipBlock++;
+                }
+            }
+
+            Point[] allPoints = new Point[maxShipBlock];
+
+
+            int index = 0;
+            for (int i = 0; i < _ships.Length; i++)
+            {
+                for (int j = 0; j < _ships[i].Size; j++)
+                {
+                    allPoints[index] = _ships[i].Points[j];
+                    index++;
+                }
+            }
+            Point temp = new Point(x, y);
+
+            for (int i = 0; i < maxShipBlock; i++)
+            {
+                //모든 좌표중에 현재 들어온 값이 있는가? 겹치는게 있으면 true
+                if (allPoints[i].PosX == temp.PosX &&
+                    allPoints[i].PosY == temp.PosY)
+                {
+                    return true;
+                }
+            }
+
+            //겹치는게 없다!
+            return false;
+        }
 
         //랜덤으로 배들 놓기
         public void PlaceRandomShips()
         {
 
+            PlaceShip();
+
+            Random rnd = new Random();
+
+            Random rndPointX = new Random();
+            Random rndPointY = new Random();
+
+
+            for (int i = 0; i < _ships.Length; i++)
+            {
+                //random.Next(2): 0에서 1까지의 정수 중 하나를 무작위로 생성합니다.
+                //Next(2)는 0과 1 중 하나를 반환합니다.
+                //random.Next(2) == 0; 무작위로 생성된 값이 0인지 확인하여, 0이면 true, 1이면 false를 반환합니다.
+                //true 면 가로 flase이면 세로
+                _ships[i].isHorizontal = rnd.Next(2) == 0;
+                
+                //현재 선택된 배 크기만큼 좌표배열 생성
+                Point[] point = new Point[Ships[i].Size];
+
+                
+                if (_ships[i].isHorizontal)// 현재 배는 가로
+                {
+                    point[0].PosX = rndPointX.Next(_myField.Sea.GetLength(0));
+                    point[0].PosY = rndPointX.Next(_myField.Sea.GetLength(0) - _ships[i].Size); //필드 최대길이에서 배 사이즈만큼 이미 뻈음.
+
+                    if (FindShip(point[0].PosX, point[0].PosY) == false) // 지정된 좌표에 배가 없다면
+                    {
+                        for (int j = 1; j < _ships[i].Size; j++)
+                        {                            
+                            point[j].PosY = point[0].PosY+j;
+                            point[j].PosX = point[0].PosX;
+
+                        }
+                    }
+
+                }
+                else //세로
+                {
+                    point[0].PosX = rndPointX.Next(_myField.Sea.GetLength(0) - _ships[i].Size);
+                    point[0].PosY = rndPointX.Next(_myField.Sea.GetLength(0) );
+
+                    if (FindShip(point[0].PosX, point[0].PosY) == false) // 지정된 좌표에 배가 없다면
+                    {
+                        for (int j = 1; j < _ships[i].Size; j++)
+                        {
+                            point[j].PosX = point[0].PosX + j;
+                            point[j].PosY = point[0].PosY;
+                        }
+                    }
+                }
+
+
+                int count = 0;
+                int index = 0;
+
+                //현재 배 사이즈 만큼 어디 들갈수있나 체킹
+                while (index < point.Length) 
+                {
+                    //세번다 배가 없으면 고고
+                    if(FindShip(point[index].PosX,point[index].PosY) == false)
+                    {
+                        count++;
+                    }
+                    index++;
+                }
+                    
+                if(count == _ships[i].Size)
+                {
+                    _ships[i].Points = point;
+                }
+
+
+                /* 좌표겹침 해결안된 랜덤배치
+                //while (isShipCreate == false)
+                //{
+                //    if (_ships[i].isHorizontal)//가로
+                //    {
+                //        //0~ 멥 사이즈만큼  랜덤좌표 생성.
+                //        point = new Point(rndPointX.Next(0,_myField.Sea.GetLength(0) ), rndPointY.Next(0, _myField.Sea.GetLength(0) - _ships[i].Size));
+                //        Console.WriteLine(point.PosY);
+
+                //    }
+                //    else
+                //    {
+                //        point = new Point(rndPointX.Next(0, _myField.Sea.GetLength(0) - _ships[i].Size), rndPointY.Next(0, _myField.Sea.GetLength(0)));
+                //        Console.WriteLine(point.PosX);
+                //    }
+
+                //    if (_ships[i].FindPointByInt(point.PosX, point.PosY) < 0)// 해당 좌표에 아무것도없음
+                //    {
+                //        if (_ships[i].isHorizontal)//가로
+                //        {
+
+                //            for (int j = 1; j < _ships[i].Size; j++)
+                //            {
+                //                if (_ships[i].FindPointByInt(point.PosX, point.PosY + j) < 0) //해당 좌표에 아무것도없슴
+                //                {
+                //                    if (j == _ships[i].Size - 1)
+                //                    {
+                //                        for (int z = 0; z < _ships[i].Size; z++)
+                //                        {
+                //                            _ships[i].SetPointByIndex(z, new Point(point.PosX, point.PosY + z));
+                //                        }
+                //                        isShipCreate = true;
+                //                    }
+
+                //                }
+                //                else
+                //                {
+                //                    break;
+                //                }
+
+                //            }
+                //        }
+                //        else//세로
+                //        {
+                //            for (int j = 1; j < _ships[i].Size; j++)
+                //            {
+                //                if (_ships[i].FindPointByInt(point.PosX + j, point.PosY) < 0) //해당 좌표에 아무것도없슴
+                //                {
+                //                    if (j == _ships[i].Size - 1)
+                //                    {
+
+                //                        for (int z = 0; z < _ships[i].Size; z++)
+                //                        {
+                //                            _ships[i].SetPointByIndex(z, new Point(point.PosX + z, point.PosY));
+                //                        }
+                //                        isShipCreate = true;
+
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    break;
+                //                }
+                //            }
+
+                //        }
+                //    }
+
+                //}
+                */
+            }
         }
 
 

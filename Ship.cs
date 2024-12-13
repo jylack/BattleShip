@@ -56,11 +56,18 @@ namespace BattleShip
         private int _size; // 배사이즈 나중에 필요없으면 뺄듯
         private Point[] _points;
         private bool _isAlive; // 배 가라앉았는지 플래그 필요없음 뺌
-
+        private bool _isHorizontal =false; //가로형 인가? false이면 세로
         public ShipType Type
         {
             get { return _type;}
             set { _type = value; }
+        }
+
+
+        public bool isHorizontal
+        {
+            get { return _isHorizontal; }
+            set { _isHorizontal = value; }
         }
 
         public string Name
