@@ -19,7 +19,7 @@ namespace BattleShip
         // 암것도 없으면 10x10 필드로 생성, false로 초기화
         public Field()
         {
-            _sea = new bool[10, 10];
+            _sea = new bool[15, 15];
         }
         
         // 맵 생성, 0-9 A-Z 까지 더이상 표기 힘드니까 36까지 받음
@@ -150,7 +150,7 @@ namespace BattleShip
 
         private void printXIndex(Player player, Player cpu)
         {
-            string indexStr = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string indexStr = "⓪①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⓏⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
             string playerXIndex = indexStr.Substring(0, player.Field.Sea.GetLength(1));
             string cpuXIndex = indexStr.Substring(0, cpu.Field.Sea.GetLength(1));
             Console.WriteLine("/" + playerXIndex + "\t/" + cpuXIndex);
