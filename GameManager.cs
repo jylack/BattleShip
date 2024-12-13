@@ -113,13 +113,16 @@ namespace BattleShip
             for (int i = 0; i < player.Ships[selectShipIndex].Size; i++)
             {
 
-                //selectPoint = new Point(player.Ships[selectShipIndex].Points[i].PosX + curSur.PosX, player.Ships[selectShipIndex].Points[i].PosY + curSur.PosY);
+                if (player.Ships[selectShipIndex].IsHorizontal())
+                {
+                    player.Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX , curSur.PosY +i));
 
-                //player.Ships[selectShipIndex].SetPointByIndex(selectShipIndex, curSur);
+                }
+                else
+                {
+                    player.Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX + i, curSur.PosY));
+                }
 
-                player.Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX+i, curSur.PosY ));
-
-                
             }
 
             Console.WriteLine($"x{selectPoint.PosX} : y{selectPoint.PosY}");
