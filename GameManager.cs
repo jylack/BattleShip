@@ -79,27 +79,35 @@ namespace BattleShip
         //턴 반복되는동안 수행 여기서 좌표입력받고 cpu가 공격하고 실행함.
         public void UpdateGame()
         {
-            if (isGameSetComplete == false)//플레이어 세팅 완료 전까진 이거만 작동.
+            //플레이어 세팅 완료 전까진 이거만 작동.
+            if (isGameSetComplete == false)
             {
                 InterFacePrint();
 
+                //배 배치중...
                 while (isSelecting == false)
                 {
-
                     //키 입력받아서 배 재배치
                     inputKey = Console.ReadKey(true);
                     ShipPointUpdate(inputKey);
 
                     Field.PrintField(player);
                     selectInterface.ShipSelectingView();
-
                 }
-
             }
+            //세팅 완료 본격적인 게임 시작.
             else
             {
                 //게임 시작시 cpu player 둘다 그려줌
                 Field.PrintField(player,cpu);
+
+                int textCount = 1;
+
+
+                Point interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
+                Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+                Console.WriteLine("공격하고 싶은 좌표를 입력해 주세요");
+                Console.ReadLine();
             }
 
         }
