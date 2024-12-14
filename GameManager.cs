@@ -10,11 +10,14 @@ namespace BattleShip
     {
 
         public bool isGamePlay = false;
-
+        bool isGameSetComplete = false;
+        bool isSelecting = false;   
 
         Player player = new Player();
         Player cpu = new Player();
         Field field = new Field();
+
+        SelectInterface selectInterface = new SelectInterface();
 
         Point curSur = new Point(0, 0);
 
@@ -43,7 +46,7 @@ namespace BattleShip
 
             Console.WriteLine("게임을 시작 하시겠습니까?");
             Console.WriteLine("1.게임시작\t 2.게임 종료");
-            
+
             inputKey = Console.ReadKey(true);
 
             switch (inputKey.Key)
@@ -61,6 +64,7 @@ namespace BattleShip
 
             if (isGamePlay)
             {
+             
                 player.InitPlayer();
                 cpu.InitPlayer();
                 cpu.Name = "CPU";
@@ -69,36 +73,100 @@ namespace BattleShip
                 Console.Write("플레이어의 이름을 입력해 주세요 : ");
                 player.Name = Console.ReadLine();
             }
-            
+
         }
 
         //턴 반복되는동안 수행 여기서 좌표입력받고 cpu가 공격하고 실행함.
         public void UpdateGame()
         {
+            if (isGameSetComplete == false)//플레이어 세팅 완료 전까진 이거만 작동.
+            {
+                InterFacePrint();
 
+                while (isSelecting == false)
+                {
 
+                    //키 입력받아서 배 재배치
+                    inputKey = Console.ReadKey(true);
+                    ShipPointUpdate(inputKey);
+
+                    Field.PrintField(player);
+                    selectInterface.ShipSelectingView();
+
+                }
+
+            }
+            else
+            {
+                //게임 시작시 cpu player 둘다 그려줌
+                Field.PrintField(player,cpu);
+            }
+
+        }
+
+        //움직일 배 선택하는 방법을 써줄 인터페이스 그려주기
+        public void InterFacePrint()
+        {
+            
             //필드 그려줌
-            Field.PrintField(player, cpu);
+            Field.PrintField(player);
+
+            //Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY);            
+            selectShipIndex = selectInterface.ShipSelectView(player);
+
+            
+            Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY+10);
+            Console.WriteLine(selectShipIndex);
+            isSelecting = false;
+
+            //선택된 배의 첫번째 인덱스 좌표 가져와서 움직일 커서 좌표로 지정
+            curSur = new Point(player.Ships[selectShipIndex].Points[0].PosX, player.Ships[selectShipIndex].Points[0].PosY);
+
+        }
 
 
-            //키 입력받아서 배 재배치
-            inputKey = Console.ReadKey(true);
-            ShipPointUpdate(inputKey);
-
-        
+        //특정좌표 덮어쓰고 지우기 메서드
+        public void EraserPrint(int x, int y)
+        {
+            for (int i = 0; i < player.Field.Sea.GetLength(0)*2; i++)
+            {
+                for (int j = 0; j < player.Field.Sea.GetLength(1)*2; j++)
+                {
+                    Console.SetCursorPosition(x+j, y+i);
+                    Console.Write(" ");
+                }
+            }
 
 
         }
 
-        public void ShipPointUpdate(ConsoleKeyInfo key )
-        {
 
+
+        //나중에 씬 인터페이스 만들어서 
+        //인터페이스 메서드로 키입력 메서드 만든다음
+        //씬마다 키입력값이 달라지게 하면 플레이어의 스위치를 일일이 호출하거나
+        //할필요없이 매니저에서 자동으로 해당씬의 키입력값을 가져올듯?
+        public void ShipPointUpdate(ConsoleKeyInfo key)
+        {
 
             switch (key.Key)
             {
+                //플레이어 배 배치 완료
+                case ConsoleKey.Enter:
+                    isGameSetComplete = true;
+                    isSelecting = true;
+                    
+                    break;
+
+                //선택된 배 원하는 좌표에 지정 완료
+                case ConsoleKey.Spacebar:
+                    isSelecting = true;
+                    
+                    break;
+
                 case ConsoleKey.R:
 
-
+                    player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
                     break;
 
                 case ConsoleKey.A:

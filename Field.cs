@@ -94,7 +94,15 @@ namespace BattleShip
             cpu.Field.PrintField(cpu, player.Field.Sea.GetLength(1)+1);     
             Console.WriteLine("");
         }
+        //위에거 오버로드 플레이어만 그리기
+        public static void PrintField(Player player)
+        {
+            Console.Clear();
+            player.Field.PrintField(player, 0);
         
+            Console.WriteLine("");
+        }
+
         // 깔끔버전!?
         // needToSpace 인자값이 0이면, 왼쪽부터 아니면 쭉 그려줌
         public void PrintField(Player somePlayer, int needToSpace)

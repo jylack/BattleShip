@@ -20,7 +20,14 @@ namespace BattleShip
         Skills _skill;
         Ship[] _ships;
         Field _myField;
+
+        int _selectShipIndex;
         
+        public int SelectShipIndex
+        {
+            get { return _selectShipIndex; }
+            set { _selectShipIndex = value; }
+        }
 
         //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
         public void InitPlayer()
