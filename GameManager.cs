@@ -10,8 +10,13 @@ namespace BattleShip
     {
 
         public bool isGamePlay = false;
+
         bool isGameSetComplete = false;
-        bool isSelecting = false;   
+
+        bool isSelecting = false;
+
+        bool isGameOver = false;
+
 
         Player player = new Player();
         Player cpu = new Player();
@@ -23,18 +28,18 @@ namespace BattleShip
 
         ConsoleKeyInfo inputKey;
 
-        string[] logo = { "--------------------------------------------------------------------------------------------------",
-"--------------------------------------------------------------------------------------------------" ,
-"--=%%%%%%%%*--=#%%%%%*+%%%%%%@%*%%%%%%%%#%%%@=---*@%%%%@#=+%%%%%%%*=#%%%%+%@%%+#%%%#+%%%%%%%#+----" ,
-"--=%@%@#-%%%*-+%%%%%%#++#%%%%#*+*#%%%%#+*%%%%=---*@%%%**++%%%@*%%%%*#%%%%+%%%%+#%%@#+%%%@*%%%%*---" ,
-"--=%%%@--%%%*-*%%%#%%%+-+%%%%*---+%%%%+-+%%%%=---*@%%%---+%%%@-####+#%%%%+%%%%=#%%%#+%%%@=%%%%*---" ,
-"--=#@%@%%@%%=-*%%-+-%%*-=%%%%*---+%%%%+-+%%%%=---*%%%%%%*+%%%%%%%+--#%%%%%%%%%=%%%%#+%%%@=%%%%+---" ,
-"--=#%%%%%%%#-=#%%-=-%%#==%%%%*---+%%%%+-+%%%%=---*%%%%%#+--*%%%%%%%+#%%%%%%%%%=%%%%#+%%%%%%%%#=---" ,
-"--=*%%-#-%%%#+#%%%#%%%%+=#%%%*---=#%%#+-+#%%%=---*%%%#---=====-%%%%+#%%%#+%%%#=%%%%**%%%%##*=-----" ,
-"---*%%-#-%%%#+#%%%**%%#+=####*---=####+-=####=---+####---+####-####+*####+%%%#=#%%%**%%%#---------" ,
-"=--+%%%%%%%#*+####=+###*=*###+---=*##*+==*######++######*+*#######*+*###*+###*+####**#%%#==-------" ,
-"===+*******=-=***+==+**+=+++++---=++++===+++++++==+++++++==+++++++==++++++++++=+**+=+***+=====----" ,
-"---=--=--------==-----=====-=--=====================-===---===-=========-==----=====-----==-------" };
+        string[] logo = {   "--------------------------------------------------------------------------------------------------",
+                            "--------------------------------------------------------------------------------------------------" ,
+                            "--=%%%%%%%%*--=#%%%%%*+%%%%%%@%*%%%%%%%%#%%%@=---*@%%%%@#=+%%%%%%%*=#%%%%+%@%%+#%%%#+%%%%%%%#+----" ,
+                            "--=%@%@#-%%%*-+%%%%%%#++#%%%%#*+*#%%%%#+*%%%%=---*@%%%**++%%%@*%%%%*#%%%%+%%%%+#%%@#+%%%@*%%%%*---" ,
+                            "--=%%%@--%%%*-*%%%#%%%+-+%%%%*---+%%%%+-+%%%%=---*@%%%---+%%%@-####+#%%%%+%%%%=#%%%#+%%%@=%%%%*---" ,
+                            "--=#@%@%%@%%=-*%%-+-%%*-=%%%%*---+%%%%+-+%%%%=---*%%%%%%*+%%%%%%%+--#%%%%%%%%%=%%%%#+%%%@=%%%%+---" ,
+                            "--=#%%%%%%%#-=#%%-=-%%#==%%%%*---+%%%%+-+%%%%=---*%%%%%#+--*%%%%%%%+#%%%%%%%%%=%%%%#+%%%%%%%%#=---" ,
+                            "--=*%%-#-%%%#+#%%%#%%%%+=#%%%*---=#%%#+-+#%%%=---*%%%#---=====-%%%%+#%%%#+%%%#=%%%%**%%%%##*=-----" ,
+                            "---*%%-#-%%%#+#%%%**%%#+=####*---=####+-=####=---+####---+####-####+*####+%%%#=#%%%**%%%#---------" ,
+                            "=--+%%%%%%%#*+####=+###*=*###+---=*##*+==*######++######*+*#######*+*###*+###*+####**#%%#==-------" ,
+                            "===+*******=-=***+==+**+=+++++---=++++===+++++++==+++++++==+++++++==++++++++++=+**+=+***+=====----" ,
+                            "---=--=--------==-----=====-=--=====================-===---===-=========-==----=====-----==-------" };
 
         int selectShipIndex = 0;
 
@@ -52,8 +57,8 @@ namespace BattleShip
             switch (inputKey.Key)
             {
                 case ConsoleKey.D1:
-                    //isGamePlay = true;
-                    //break;
+                //isGamePlay = true;
+                //break;
                 case ConsoleKey.NumPad1:
                     isGamePlay = true;
                     break;
@@ -64,7 +69,7 @@ namespace BattleShip
 
             if (isGamePlay)
             {
-             
+
                 player.InitPlayer();
                 cpu.InitPlayer();
                 cpu.Name = "CPU";
@@ -98,37 +103,102 @@ namespace BattleShip
             //세팅 완료 본격적인 게임 시작.
             else
             {
-                //게임 시작시 cpu player 둘다 그려줌
-                Field.PrintField(player,cpu);
+                string winerName = "";
 
-                int textCount = 1;
+                while (isGameOver == false)
+                {
+                    ShipsFight();
+                                       
+                    if (player.IsAllHitShips())
+                    {
+                        winerName = player.Name;
+                        isGameOver= true;
+                    }
+
+                    if (cpu.IsAllHitShips())
+                    {
+                        winerName = cpu.Name;
+                        isGameOver = true;
+                    }
+
+                }
+
+                isGamePlay = false;
+
+                Console.Clear();
+
+                Console.WriteLine($"{winerName}가 이겼습니다!");
+            }
+
+        }
+
+        //타겟의 배가 모두 히트상태인가?
+        public bool IsAllHitShips(Player target)
+        {
 
 
-                Point interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
-                Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            return false;
+        }
+
+
+        public void ShipsFight()
+        {
+            //게임 시작시 cpu player 둘다 그려줌
+            Field.PrintField(player, cpu);
+
+            int textCount = 1;
+
+            //인터페이스 좌표 초기화
+            Point interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
+            Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+
+            bool isAttackedLocation = false;
+
+            int posX;
+            int posY;
+
+            //플레이어가 좌표 제대로 입력했는지 체크
+            while (isAttackedLocation == false)
+            {
                 Console.WriteLine("공격하고 싶은 좌표를 입력해 주세요");
-                
+
                 Console.Write("x좌표 입력 : ");
-                int posX = int.Parse(Console.ReadLine());
+                posX = int.Parse(Console.ReadLine());
 
                 Console.WriteLine();
-                
+
                 Console.Write("y좌표 입력 : ");
-                int posY = int.Parse(Console.ReadLine());
+                posY = int.Parse(Console.ReadLine());
 
-                //player.ShotMissile(posX, posY,cpu);
-                cpu.Field.TakeMissile(posX, posY, cpu.Ships);
+                isAttackedLocation = player.ShotMissile(posY, posX, cpu);
 
-                
-                Random rndPosXY = new Random();
-                
+
+                if (posX >= cpu.Field.Sea.GetLength(0) ||
+                    posY >= cpu.Field.Sea.GetLength(1))
+                {
+                    isAttackedLocation = false;
+                    Console.WriteLine("공격 범위를 벗어난 입력입니다. 다시 입력해주세요");
+
+                }
+
+                if (isAttackedLocation == false)
+                {
+                    Console.WriteLine("이미 쐇던 구역입니다 다시입력해주세요");
+                }
+
+            }
+
+            Random rndPosXY = new Random();
+
+            isAttackedLocation = false;
+
+            //NPC가 좌표 제대로 입력했는지 체크
+            while (isAttackedLocation == false)
+            {
                 posX = rndPosXY.Next(player.Field.Sea.GetLength(0));
                 posY = rndPosXY.Next(player.Field.Sea.GetLength(1));
-                player.Field.TakeMissile(posX, posY, player.Ships);
 
-
-                //Console.WriteLine($"x : {posX} Y: {posY} ");
-
+                isAttackedLocation = cpu.ShotMissile(posX, posY, player);
             }
 
         }
@@ -136,15 +206,15 @@ namespace BattleShip
         //움직일 배 선택하는 방법을 써줄 인터페이스 그려주기
         public void InterFacePrint()
         {
-            
+
             //필드 그려줌
             Field.PrintField(player);
 
             //Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY);            
             selectShipIndex = selectInterface.ShipSelectView(player);
 
-            
-            Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY+10);
+
+            Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY + 10);
             Console.WriteLine(selectShipIndex);
             isSelecting = false;
 
@@ -157,11 +227,11 @@ namespace BattleShip
         //특정좌표 덮어쓰고 지우기 메서드
         public void EraserPrint(int x, int y)
         {
-            for (int i = 0; i < player.Field.Sea.GetLength(0)*2; i++)
+            for (int i = 0; i < player.Field.Sea.GetLength(0) * 2; i++)
             {
-                for (int j = 0; j < player.Field.Sea.GetLength(1)*2; j++)
+                for (int j = 0; j < player.Field.Sea.GetLength(1) * 2; j++)
                 {
-                    Console.SetCursorPosition(x+j, y+i);
+                    Console.SetCursorPosition(x + j, y + i);
                     Console.Write(" ");
                 }
             }
@@ -184,13 +254,13 @@ namespace BattleShip
                 case ConsoleKey.Enter:
                     isGameSetComplete = true;
                     isSelecting = true;
-                    
+
                     break;
 
                 //선택된 배 원하는 좌표에 지정 완료
                 case ConsoleKey.Spacebar:
                     isSelecting = true;
-                    
+
                     break;
 
                 case ConsoleKey.R:

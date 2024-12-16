@@ -21,15 +21,23 @@ namespace BattleShip
         Ship[] _ships;
         Field _myField;
 
-        int _selectShipIndex;
-        
-        public int SelectShipIndex
+        //맞은배들의 갯수
+        int _hitShipIndex= 0;
+        //모든배들의 블럭갯수
+        int _maxShipBlock = 0;
+
+        public int MaxShipBlock
         {
-            get { return _selectShipIndex; }
-            set { _selectShipIndex = value; }
+            get { return _maxShipBlock; }
         }
 
-        
+        public int HitShipIndex
+        {
+            get { return _hitShipIndex; }
+            set { _hitShipIndex = value; }
+        }
+
+
         public Ship[] Ships
         {
             get { return _ships; }
@@ -62,8 +70,31 @@ namespace BattleShip
                 _ships[i] = new Ship((ShipType)i);
             }
 
+            //모든 배의 블럭갯수
+            _maxShipBlock = 0;
+
+            for (int i = 0; i < _ships.Length; i++)
+            {
+                for (int j = 0; j < _ships[i].Size; j++)
+                {
+                    _maxShipBlock++;
+                }
+            }
+
+
             //배들 기본 위치배정 왼쪽 위로 정렬
             PlaceShip();
+        }
+
+        public bool IsAllHitShips()
+        {
+
+            if (HitShipIndex >= MaxShipBlock)
+            {
+                return true;
+            }
+
+            return false;
         }
 
 
@@ -82,22 +113,14 @@ namespace BattleShip
 
         }
 
+
+
         //전체멥에서 해당위치에 배가있슴?
         public bool FindShip(int x, int y)
         {
-            //모든 배의 블럭갯수
-            int maxShipBlock = 0;
-
-            for (int i = 0; i < _ships.Length; i++)
-            {
-                for (int j = 0; j < _ships[i].Size; j++)
-                {
-                    maxShipBlock++;
-                }
-            }
 
             //모든 배의 좌표값 모음
-            Point[] allPoints = new Point[maxShipBlock];
+            Point[] allPoints = new Point[MaxShipBlock];
 
 
             int index = 0;
@@ -111,7 +134,7 @@ namespace BattleShip
             }
             Point temp = new Point(x, y);
 
-            for (int i = 0; i < maxShipBlock; i++)
+            for (int i = 0; i < MaxShipBlock; i++)
             {
                 //모든 좌표중에 현재 들어온 값이 있는가? 겹치는게 있으면 true
                 if (allPoints[i].PosX == temp.PosX &&
@@ -144,14 +167,14 @@ namespace BattleShip
                 //random.Next(2) == 0; 무작위로 생성된 값이 0인지 확인하여, 0이면 true, 1이면 false를 반환합니다.
                 //true 면 가로 flase이면 세로
                 _ships[i].isHorizontal = rnd.Next(2) == 0;
-                
+
                 //현재 선택된 배 크기만큼 좌표배열 생성
                 Point[] point = new Point[Ships[i].Size];
 
-                
+
                 if (_ships[i].isHorizontal)// 현재 배는 가로
                 {
-                    
+
                     point[0].PosX = rndPointX.Next(_myField.Sea.GetLength(0));
                     point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(1) - _ships[i].Size); //필드 최대길이에서 배 사이즈만큼 이미 뻈음.
 
@@ -160,7 +183,7 @@ namespace BattleShip
                         for (int j = 1; j < _ships[i].Size; j++)
                         {
                             point[j].PosX = point[0].PosX;
-                            point[j].PosY = point[0].PosY+j;
+                            point[j].PosY = point[0].PosY + j;
                         }
                     }
 
@@ -168,7 +191,7 @@ namespace BattleShip
                 else //세로
                 {
                     point[0].PosX = rndPointX.Next(_myField.Sea.GetLength(0) - _ships[i].Size);//필드 최대길이에서 배 사이즈만큼 이미 뻈음.
-                    point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(1) );
+                    point[0].PosY = rndPointY.Next(_myField.Sea.GetLength(1));
 
                     if (FindShip(point[0].PosX, point[0].PosY) == false) // 지정된 좌표에 배가 없다면
                     {
@@ -184,10 +207,10 @@ namespace BattleShip
                 int index = 0;
 
                 //현재 배 사이즈 만큼 어디 들갈수있나 체킹
-                while (index < point.Length) 
+                while (index < point.Length)
                 {
                     //세번다 배가 없으면 고고
-                    if(FindShip(point[index].PosX,point[index].PosY) == false)
+                    if (FindShip(point[index].PosX, point[index].PosY) == false)
                     {
                         count++;
                     }
@@ -205,13 +228,18 @@ namespace BattleShip
             }
         }
 
+        /* 필드cs에 있는걸 플레이어로 옮겨옴
+        * 사이즈보다 큰곳에 미사일을 쏜다면, false 반환
+        * 이미 쏜곳에 미사일을 또 쐈다면 false 반환
+        * 쏠수 있는 곳에 (Field의 값이 false) 쏜다면 true
+        */
         public bool ShotMissile(int x, int y, Player target)
         {
             Point missilePoint = new Point();
             missilePoint.PosX = x;
             missilePoint.PosY = y;
 
-            bool isFieldHit= false;
+            bool isFieldHit = false;
 
             bool isOverField = false;
 
@@ -223,25 +251,41 @@ namespace BattleShip
             {
                 isOverField = true;
             }
-            
+
+
+            isFieldHit = true;
 
             if (isOverField)
             {
                 Console.WriteLine("필드의 범위를 넘어섰습니다");
-                isFieldHit=  false;
+                isFieldHit = false;
             }
 
             // 이미 쏜곳에 쐈다
             if (target.Field.Sea[x, y])
             {
                 Console.WriteLine("이미 미사일을 쏜 곳입니다");
-                isFieldHit =  false;
+                isFieldHit = false;
             }
 
             // 필드가 미사일을 맞음
             target.Field.Sea[x, y] = true;
 
-            isFieldHit = true;
+
+
+            if (isFieldHit == false)
+            {
+                return false;
+            };
+
+            //ship 중에 맞은 포인트 있나 체크
+            foreach (Ship s in target.Ships)
+            {
+                s.IsHit(missilePoint);
+            }
+            
+            //배들블럭중 한곳 맞음.
+            HitShipIndex++;
 
             return isFieldHit;
 
