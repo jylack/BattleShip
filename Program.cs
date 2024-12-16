@@ -79,9 +79,14 @@ namespace BattleShip
             
             // 내가 0,9 좌표에 CPU에게 미사일을 쏠 경우
             cpu.Field.TakeMissile(0, 9, cpu.Ships);
+
             // CPU가 플레이어에게 4,2 좌표로 미사일로 쏠 경우
             player.Field.TakeMissile(4, 2, player.Ships);
             
+            // 가라앉았습니다 테스트
+            cpu.Field.TakeMissile(3, 1, cpu.Ships);
+            cpu.Field.TakeMissile(4, 1, cpu.Ships);            
+
             // 쏜 이후 출력
             Field.PrintField(player, cpu);
             
