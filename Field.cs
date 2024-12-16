@@ -41,8 +41,12 @@ namespace BattleShip
          * 이미 쏜곳에 미사일을 또 쐈다면 false 반환
          * 쏠수 있는 곳에 (Field의 값이 false) 쏜다면 true
          */
-        public bool TakeMissile(int x, int y)
+        public bool TakeMissile(int x, int y, Ship[] targetShips)
         {
+            Point missilePoint = new Point();
+            missilePoint.PosX = x;
+            missilePoint.PosY = y;
+            
             if (IsOverField(x,y))
             {
                 Console.WriteLine("필드의 범위를 넘어섰습니다");
@@ -58,6 +62,12 @@ namespace BattleShip
 
             // 필드가 미사일을 맞음
             Sea[x, y] = true;
+            
+            //ship 중에 맞은 포인트 있나 체크
+            foreach (Ship s in targetShips)
+            {
+                s.IsHit(missilePoint);
+            }
             return true;
         }
 

@@ -76,13 +76,16 @@ namespace BattleShip
             cpu.Ships[0].Points[1].IsHit = true;
             
             Field.PrintField(player, cpu);
+            
+            // 내가 0,9 좌표에 CPU에게 미사일을 쏠 경우
+            cpu.Field.TakeMissile(0, 9, cpu.Ships);
+            // CPU가 플레이어에게 4,2 좌표로 미사일로 쏠 경우
+            player.Field.TakeMissile(4, 2, player.Ships);
+            
+            // 쏜 이후 출력
+            Field.PrintField(player, cpu);
+            
 
-            // player.Field.PrintField(player, cpu)가 너무 보기 안좋다..
-            // 좀더 예쁘게 짜보려면..?
-            // 1. Field.PrintField(player, cpu)
-            // 2. player.Field.PrintFieldWithOpponent(cpu)
-            // 3. player.PrintField(), cpu.PrintField() 한번씩 호출
-            // 3번은 근데 콘솔에서 옆으로 출력하기가 어렵기 때문에 위아래로 보여주는거 말곤 힘들듯
         }        
     }
 }
