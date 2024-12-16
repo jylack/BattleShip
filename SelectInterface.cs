@@ -15,7 +15,7 @@ namespace BattleShip
         public SelectInterface()
         {
             Console.SetCursorPosition(0, 0);
-            Console.Write("\t\t\t");
+            Console.Write("\t\t\t\t\t");
             interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
         }
 

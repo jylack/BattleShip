@@ -52,8 +52,8 @@ namespace BattleShip
             switch (inputKey.Key)
             {
                 case ConsoleKey.D1:
-                    isGamePlay = true;
-                    break;
+                    //isGamePlay = true;
+                    //break;
                 case ConsoleKey.NumPad1:
                     isGamePlay = true;
                     break;
@@ -107,7 +107,28 @@ namespace BattleShip
                 Point interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
                 Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
                 Console.WriteLine("공격하고 싶은 좌표를 입력해 주세요");
-                Console.ReadLine();
+                
+                Console.Write("x좌표 입력 : ");
+                int posX = int.Parse(Console.ReadLine());
+
+                Console.WriteLine();
+                
+                Console.Write("y좌표 입력 : ");
+                int posY = int.Parse(Console.ReadLine());
+
+                //player.ShotMissile(posX, posY,cpu);
+                cpu.Field.TakeMissile(posX, posY, cpu.Ships);
+
+                
+                Random rndPosXY = new Random();
+                
+                posX = rndPosXY.Next(player.Field.Sea.GetLength(0));
+                posY = rndPosXY.Next(player.Field.Sea.GetLength(1));
+                player.Field.TakeMissile(posX, posY, player.Ships);
+
+
+                //Console.WriteLine($"x : {posX} Y: {posY} ");
+
             }
 
         }

@@ -29,21 +29,7 @@ namespace BattleShip
             set { _selectShipIndex = value; }
         }
 
-        //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
-        public void InitPlayer()
-        {
-            _myField = new Field();
-
-            _ships = new Ship[(int)ShipType.end];
-
-            for (int i = 0; i < (int)ShipType.end; i++)
-            {
-                _ships[i] = new Ship((ShipType)i);
-            }
-
-            //배들 기본 위치배정 왼쪽 위로 정렬
-            PlaceShip();
-        }
+        
         public Ship[] Ships
         {
             get { return _ships; }
@@ -63,6 +49,23 @@ namespace BattleShip
             set { _name = value; }
         }
         /* 여기까지 */
+
+        //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
+        public void InitPlayer()
+        {
+            _myField = new Field();
+
+            _ships = new Ship[(int)ShipType.end];
+
+            for (int i = 0; i < (int)ShipType.end; i++)
+            {
+                _ships[i] = new Ship((ShipType)i);
+            }
+
+            //배들 기본 위치배정 왼쪽 위로 정렬
+            PlaceShip();
+        }
+
 
         //배들 기본 위치배정
         public void PlaceShip()
@@ -200,6 +203,48 @@ namespace BattleShip
 
 
             }
+        }
+
+        public bool ShotMissile(int x, int y, Player target)
+        {
+            Point missilePoint = new Point();
+            missilePoint.PosX = x;
+            missilePoint.PosY = y;
+
+            bool isFieldHit= false;
+
+            bool isOverField = false;
+
+
+            int xFieldSize = target.Field.Sea.GetLength(0) - 1;
+            int yFieldSize = target.Field.Sea.GetLength(1) - 1;
+
+            if (xFieldSize < x || yFieldSize < y)
+            {
+                isOverField = true;
+            }
+            
+
+            if (isOverField)
+            {
+                Console.WriteLine("필드의 범위를 넘어섰습니다");
+                isFieldHit=  false;
+            }
+
+            // 이미 쏜곳에 쐈다
+            if (target.Field.Sea[x, y])
+            {
+                Console.WriteLine("이미 미사일을 쏜 곳입니다");
+                isFieldHit =  false;
+            }
+
+            // 필드가 미사일을 맞음
+            target.Field.Sea[x, y] = true;
+
+            isFieldHit = true;
+
+            return isFieldHit;
+
         }
 
 
