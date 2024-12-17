@@ -11,18 +11,18 @@ namespace BattleShip
     {
         static void Main(string[] args)
         {
-            //GameManager gameManager = new GameManager();
-            //gameManager.InitGame();
+            GameManager gameManager = new GameManager();
+            gameManager.InitGame();
 
-            //while (gameManager.isGamePlay)
-            //{
-            //    gameManager.UpdateGame();
-            //}
+            while (gameManager.isGamePlay)
+            {
+                gameManager.UpdateGame();
+            }
 
-            //gameManager.EndGame();
+            gameManager.EndGame();
 
             // Test Code 111
-            SeongchulTest();
+            //SeongchulTest();
         }
         public static void SeongchulTest() 
         {

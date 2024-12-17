@@ -26,6 +26,9 @@ namespace BattleShip
         //모든배들의 블럭갯수
         int _maxShipBlock = 0;
 
+        //모든 배의 좌표값 모음
+        Point[] allPoints;
+
         public int MaxShipBlock
         {
             get { return _maxShipBlock; }
@@ -81,9 +84,13 @@ namespace BattleShip
                 }
             }
 
+            allPoints = new Point[MaxShipBlock];
+
 
             //배들 기본 위치배정 왼쪽 위로 정렬
             PlaceShip();
+
+
         }
 
         //히트한 배의 인덱스가 배들의 모든블럭수보다 크거나 같아질때
@@ -114,15 +121,41 @@ namespace BattleShip
             }
 
         }
+        
+        //비교할 배좌표랑 인덱스를 가지고 배있나 확인
+        public bool FindNonShip(Point[] points , int inputIndex)
+        {
+            for (int i = 0; i < Ships.Length; i++)
+            {
+                if(i != inputIndex)
+                {
+                    for(int j = 0;j < Ships[inputIndex].Size; j++)
+                    {
+                        for(int z = 0; z < Ships[i].Size; z++)
+                        {
+                            if (Ships[i].Points[z].PosX == points[j].PosX &&
+                                Ships[i].Points[z].PosY == points[j].PosY )
+                            {
+                                return true;
+                            }
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
 
+            return false;
+        }
 
 
         //전체멥에서 해당위치에 배가있슴?
         public bool FindShip(int x, int y)
         {
 
-            //모든 배의 좌표값 모음
-            Point[] allPoints = new Point[MaxShipBlock];
+            ////모든 배의 좌표값 모음
+            //Point[] allPoints = new Point[MaxShipBlock];
 
 
             int index = 0;
@@ -148,6 +181,26 @@ namespace BattleShip
 
             //겹치는게 없다!
             return false;
+        }
+
+        //배 선택된 인덱스랑 배치할 좌표 받아서 배치
+        public void ShipSetPoition(int selectShipIndex ,Point curSur)
+        {
+            //쉽 사이즈 만큼이동
+            //쉽사이즈 만큼 기준점을 기준으로 더 해줌
+            for (int i = 0; i < Ships[selectShipIndex].Size; i++)
+            {
+                if (Ships[selectShipIndex].isHorizontal)
+                {
+                    Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX, curSur.PosY + i));
+                }
+                else
+                {
+                    Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX + i, curSur.PosY));
+                }
+
+            }
+
         }
 
         //랜덤으로 배들 놓기

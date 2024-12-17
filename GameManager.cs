@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -109,11 +110,11 @@ namespace BattleShip
                 while (isGameOver == false)
                 {
                     ShipsFight();
-                                       
+
                     if (player.IsAllHitShips())
                     {
                         winerName = player.Name;
-                        isGameOver= true;
+                        isGameOver = true;
                     }
 
                     else if (cpu.IsAllHitShips())
@@ -133,7 +134,7 @@ namespace BattleShip
 
         }
 
- 
+
 
         public void ShipsFight()
         {
@@ -148,6 +149,7 @@ namespace BattleShip
             textCount++;
 
             bool isAttackedLocation = false;
+            bool isInputTest = false;
 
             int posX = 0;
             int posY = 0;
@@ -158,14 +160,22 @@ namespace BattleShip
                 Console.WriteLine("공격하고 싶은 좌표를 입력해 주세요");
 
                 Console.Write("x좌표 입력 : ");
-                posX = int.Parse(Console.ReadLine());
+                isInputTest = int.TryParse(Console.ReadLine(), out posX);
+
 
                 Console.WriteLine();
 
                 Console.Write("y좌표 입력 : ");
-                posY = int.Parse(Console.ReadLine());
+                isInputTest = int.TryParse(Console.ReadLine(), out posY);
 
-                isAttackedLocation = player.ShotMissile(posY, posX, cpu);
+                if (isInputTest)
+                {
+                    isAttackedLocation = player.ShotMissile(posY, posX, cpu);
+                }
+                else
+                {
+                    Console.WriteLine("잘못 입력하셨습니다 다시 입력해주세요.");
+                }
 
             }
 
@@ -233,7 +243,21 @@ namespace BattleShip
 
         }
 
+        public void MoveShipCheck(Point cursur , Point[] temp)
+        {
 
+            for (int i = 0; i < player.Ships[selectShipIndex].Size; i++)
+            {
+                if (player.Ships[selectShipIndex].isHorizontal)
+                {
+                    temp[i] = new Point(curSur.PosX, curSur.PosY + i);
+                }
+                else
+                {
+                    temp[i] = new Point(curSur.PosX + i, curSur.PosY);
+                }
+            }
+        }
 
         //나중에 씬 인터페이스 만들어서 
         //인터페이스 메서드로 키입력 메서드 만든다음
@@ -241,6 +265,10 @@ namespace BattleShip
         //할필요없이 매니저에서 자동으로 해당씬의 키입력값을 가져올듯?
         public void ShipPointUpdate(ConsoleKeyInfo key)
         {
+            bool isShipsCheck = false;
+
+            Point[] temp = new Point[player.Ships[selectShipIndex].Size];
+
 
             switch (key.Key)
             {
@@ -257,37 +285,124 @@ namespace BattleShip
 
                     break;
 
+                //회전시킬꺼야~
                 case ConsoleKey.R:
 
+
                     player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
+
+
+                    //for(int i = 0; i < player.Ships[selectShipIndex].Size; i++)
+                    //{
+                    player.ShipSetPoition(selectShipIndex, curSur);
+
+                    //하나라도 배가 겹치면 배가있다 해줌
+                    if (player.FindNonShip(player.Ships[selectShipIndex].Points, selectShipIndex))
+                    {
+                        isShipsCheck = true;
+                    }
+
+                    //}
+
+                    //돌렸을때 배가 있었으면 다시 원상복귀 해줌
+                    if (isShipsCheck)
+                    {
+                        player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
+                    }
+                    //배가 없었으면 테스트하느라 바꿧던거 그대로 내려감
+
+
                     break;
 
+                //방향키 좌표이동
                 case ConsoleKey.A:
                 case ConsoleKey.LeftArrow:
-                
 
+                    
                     if (curSur.PosY - 1 >= 0)
                     {
                         curSur.PosY -= 1;
                     }
+
+
+                    MoveShipCheck(curSur,temp);
+
+                    //겹친게 있으면 커서값 원상복구
+                    //이동한걸 다시 취소해야해서
+                    if (player.FindNonShip(temp, selectShipIndex))
+                    {
+                        curSur.PosY += 1;
+                    }
+                    
+
                     break;
 
                 case ConsoleKey.S:
                 case ConsoleKey.DownArrow:
 
-                    if (curSur.PosX + 1 <= field.Sea.GetLength(1) - player.Ships[selectShipIndex].Size)
+                    //현재 선택된 배가 가로일경우
+                    if (player.Ships[selectShipIndex].isHorizontal)
                     {
-                        curSur.PosX += 1;
+                        if (curSur.PosX + 1 < field.Sea.GetLength(1))
+                        {
+                            curSur.PosX += 1;
+                        }
+                    }
+                    //현재 선택된 배가 세로일경우
+                    else
+                    {
+                        if (curSur.PosX + 1 <= field.Sea.GetLength(1) - player.Ships[selectShipIndex].Size)
+                        {
+                            curSur.PosX += 1;
+                        }
+                    }
+                    
+
+                    MoveShipCheck(curSur, temp);
+
+
+                    //겹친게 있으면 커서값 원상복구
+                    //이동한걸 다시 취소해야해서
+                    if (player.FindNonShip(temp, selectShipIndex))
+                    {
+                        curSur.PosX -= 1;
                     }
                     break;
+
                 case ConsoleKey.D:
                 case ConsoleKey.RightArrow:
 
-                    if (curSur.PosY + 1 < field.Sea.GetLength(0))
+                    //현재 선택된 배가 가로일경우
+                    if (player.Ships[selectShipIndex].isHorizontal)
                     {
-                        curSur.PosY += 1;
+                        
+                        if (curSur.PosY + 1 <= field.Sea.GetLength(0) - player.Ships[selectShipIndex].Size)
+                        {
+                            curSur.PosY += 1;
+
+                        }
                     }
+                    //현재 선택된 배가 세로일경우
+                    else
+                    {
+                        if (curSur.PosY + 1 < field.Sea.GetLength(0))
+                        {
+                            curSur.PosY += 1;
+                        }
+                    }
+
+                    MoveShipCheck(curSur, temp);
+
+                    //겹친게 있으면 커서값 원상복구
+                    //이동한걸 다시 취소해야해서
+                    if (player.FindNonShip(temp, selectShipIndex))
+                    {
+                        curSur.PosY -= 1;
+                    }
+
+
                     break;
+
                 case ConsoleKey.W:
                 case ConsoleKey.UpArrow:
 
@@ -296,26 +411,28 @@ namespace BattleShip
                         curSur.PosX -= 1;
                     }
 
+                    MoveShipCheck(curSur, temp);
+
+
+
+                    //겹친게 있으면 커서값 원상복구
+                    //이동한걸 다시 취소해야해서
+                    if (player.FindNonShip(temp, selectShipIndex))
+                    {
+                        curSur.PosX += 1;
+
+                    }
+
+
                     break;
+
                 default:
+
                     break;
             }
 
 
-            //쉽 사이즈 만큼이동
-            //쉽사이즈 만큼 기준점을 기준으로 더 해줌
-            for (int i = 0; i < player.Ships[selectShipIndex].Size; i++)
-            {
-                if (player.Ships[selectShipIndex].isHorizontal)
-                {
-                    player.Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX, curSur.PosY + i));
-                }
-                else
-                {
-                    player.Ships[selectShipIndex].SetPointByIndex(i, new Point(curSur.PosX + i, curSur.PosY));
-                }
-
-            }
+            player.ShipSetPoition(selectShipIndex, curSur);
 
             //가로세로 디버그 
             //Console.WriteLine(player.Ships[selectShipIndex].IsHorizontal());
