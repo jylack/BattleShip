@@ -305,5 +305,30 @@ namespace BattleShip
                 }                
             }
         }
+
+        // 윈도 11인지 판별하는 메서드
+        // https://stackoverflow.com/questions/2819934/detect-windows-version-in-net
+        public static bool IsWin11()
+        {
+            OperatingSystem os = Environment.OSVersion;
+
+            if (os.Platform != PlatformID.Win32NT)
+            {
+                return false;
+            }
+
+            // 22000 버전 부터 윈도우 11 이라고함
+            if (os.Version.Build < 22000)
+            {
+                return false;
+            };
+
+            return true;
+        }
+
+        public static bool IsUnix()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Unix;
+        }
     }
 }

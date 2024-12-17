@@ -55,6 +55,7 @@
     <Compile Include="Ship.cs" />
   </ItemGroup>
   <ItemGroup>
+    <!-- 의미없는 주석.. 왜 자동으로 매니페스트를 추가 못하니... -->
     <None Include="App.config" />
     <None Include="app.manifest" />
   </ItemGroup>
