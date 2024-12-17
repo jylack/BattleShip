@@ -104,7 +104,7 @@ namespace BattleShip
             // 띄어쓸 공간 필요하면, 탭추가
             if (needToSpace > 0)
             {
-                Console.Write("\t");
+                AddTabToField(2);
             }
             Console.Write(player.Name);
             Console.WriteLine();
@@ -123,7 +123,6 @@ namespace BattleShip
         {
             Console.Clear();
             player.Field.PrintField(player, 0);
-        
             Console.WriteLine("");
         }
 
@@ -156,12 +155,12 @@ namespace BattleShip
                 // X인덱스 출력
                 if (i == playerSea.GetLength(0) - 1)
                 {
-                    printXIndex(somePlayer, needToSpace, i);
+                    PrintXIndex(somePlayer, needToSpace, i);
                 }
             }            
         }
         
-        private void printXIndex(Player player, int needToSpace, int i)
+        private void PrintXIndex(Player player, int needToSpace, int i)
         {
             // 0번 깨져서 어쩔수없다
             string indexStr = "ⓞ①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
@@ -169,25 +168,24 @@ namespace BattleShip
             Console.SetCursorPosition(needToSpace, i+2);
             if (needToSpace > 0)
             {
-                Console.Write("\t");
+                AddTabToField(2);
             }            
             Console.Write("/"+playerXIndex);
         }
         
-        private void printXIndex(Player player, Player cpu)
+        private void AddTabToField(int tabSize)
         {
-            // 0번 깨져서 어쩔수없다
-            string indexStr = "ⓞ①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⓏⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
-            string playerXIndex = indexStr.Substring(0, player.Field.Sea.GetLength(1));
-            string cpuXIndex = indexStr.Substring(0, cpu.Field.Sea.GetLength(1));
-            Console.WriteLine("/" + playerXIndex + "\t/" + cpuXIndex);
+            for (int i = 0; i < tabSize; i++)
+            {
+                Console.Write("\t");
+            }
         }
 
         private void PrintYIndex(int loop, int needToSpace)
         {
             if (needToSpace > 0)
             {
-                Console.Write("\t");                
+                AddTabToField(2);
             }            
             
             if (loop < 10)

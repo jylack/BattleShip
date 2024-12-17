@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Management;
 
 namespace BattleShip
 {
@@ -89,8 +90,13 @@ namespace BattleShip
 
             // 쏜 이후 출력
             Field.PrintField(player, cpu);
-            
 
+            OperatingSystem os = Environment.OSVersion;
+            Console.WriteLine("os : " + os);
+            Console.WriteLine("os.VersionString : " + os.VersionString);
+            Console.WriteLine("os.platform : " + os.Platform);
+            Console.WriteLine("os.Version : " + os.Version);
+            Console.WriteLine("os.ServicePack : " + os.ServicePack);
         }        
     }
 }
