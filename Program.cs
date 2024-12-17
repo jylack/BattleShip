@@ -21,7 +21,7 @@ namespace BattleShip
 
             //gameManager.EndGame();
 
-            // Test Code
+            // Test Code 111
             SeongchulTest();
         }
         public static void SeongchulTest() 
