@@ -167,20 +167,6 @@ namespace BattleShip
 
                 isAttackedLocation = player.ShotMissile(posY, posX, cpu);
 
-
-                if (posX >= cpu.Field.Sea.GetLength(0) ||
-                    posY >= cpu.Field.Sea.GetLength(1))
-                {
-                    isAttackedLocation = false;
-                    Console.WriteLine("공격 범위를 벗어난 입력입니다. 다시 입력해주세요");
-
-                }
-
-                if (isAttackedLocation == false)
-                {
-                    Console.WriteLine("이미 쐇던 구역입니다 다시입력해주세요");
-                }
-
             }
 
             Random rndPosXY = new Random();
@@ -277,6 +263,8 @@ namespace BattleShip
                     break;
 
                 case ConsoleKey.A:
+                case ConsoleKey.LeftArrow:
+                
 
                     if (curSur.PosY - 1 >= 0)
                     {
@@ -285,6 +273,7 @@ namespace BattleShip
                     break;
 
                 case ConsoleKey.S:
+                case ConsoleKey.DownArrow:
 
                     if (curSur.PosX + 1 <= field.Sea.GetLength(1) - player.Ships[selectShipIndex].Size)
                     {
@@ -292,12 +281,16 @@ namespace BattleShip
                     }
                     break;
                 case ConsoleKey.D:
+                case ConsoleKey.RightArrow:
+
                     if (curSur.PosY + 1 < field.Sea.GetLength(0))
                     {
                         curSur.PosY += 1;
                     }
                     break;
                 case ConsoleKey.W:
+                case ConsoleKey.UpArrow:
+
                     if (curSur.PosX - 1 >= 0)
                     {
                         curSur.PosX -= 1;

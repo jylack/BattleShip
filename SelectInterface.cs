@@ -47,10 +47,21 @@ namespace BattleShip
             Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
             Console.Write("R버튼 : 해당 위치 좌측 맨위 기준으로 회전.");
             textCount++;
+            textCount++;
+
+            Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            Console.Write("W S A D 버튼 : 선택 후 위치 조정.");
+            textCount++;
+
+            Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            
+            Console.Write("방향키 버튼 : 선택 후 위치 조정.");
+            textCount++;
+            textCount++;
 
             Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
             Console.Write("Enter버튼 : 모든 배 선택 완료후 게임 시작.");
-            textCount++;
+
         }
 
         public int ShipSelectView(Player ply)

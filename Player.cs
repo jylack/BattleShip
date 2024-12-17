@@ -261,24 +261,27 @@ namespace BattleShip
             {
                 Console.WriteLine("필드의 범위를 넘어섰습니다");
                 isFieldHit = false;
+                return false;
             }
 
             // 이미 쏜곳에 쐈다
             if (target.Field.Sea[x, y])
             {
                 Console.WriteLine("이미 미사일을 쏜 곳입니다");
+                Console.WriteLine();
                 isFieldHit = false;
             }
+
+            if (isFieldHit == false)
+            {
+                return false;
+            };
 
             // 필드가 미사일을 맞음
             target.Field.Sea[x, y] = true;
 
 
 
-            if (isFieldHit == false)
-            {
-                return false;
-            };
 
             //ship 중에 맞은 포인트 있나 체크
             foreach (Ship s in target.Ships)
