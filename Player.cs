@@ -339,12 +339,16 @@ namespace BattleShip
             //ship 중에 맞은 포인트 있나 체크
             foreach (Ship s in target.Ships)
             {
-                s.IsHit(missilePoint);
+                if (s.IsHit(missilePoint))
+                {
+                    //배들블럭중 한곳 맞음.
+                    //여기 게임끝 문제터짐
+                    //이게 무조건 올라감 
+                    HitShipIndex++;
+                }
             }
             
-            //배들블럭중 한곳 맞음.
-            HitShipIndex++;
-
+          
             return isFieldHit;
 
         }

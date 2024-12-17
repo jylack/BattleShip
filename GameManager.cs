@@ -30,7 +30,7 @@ namespace BattleShip
 
         ConsoleKeyInfo inputKey;
 
-        string[] logo = {   "--------------------------------------------------------------------------------------------------",
+        string[] logo = {   "--------------------------------------------------------------------------------------------------" ,
                             "--------------------------------------------------------------------------------------------------" ,
                             "--=%%%%%%%%*--=#%%%%%*+%%%%%%@%*%%%%%%%%#%%%@=---*@%%%%@#=+%%%%%%%*=#%%%%+%@%%+#%%%#+%%%%%%%#+----" ,
                             "--=%@%@#-%%%*-+%%%%%%#++#%%%%#*+*#%%%%#+*%%%%=---*@%%%**++%%%@*%%%%*#%%%%+%%%%+#%%@#+%%%@*%%%%*---" ,
@@ -71,7 +71,6 @@ namespace BattleShip
 
             if (isGamePlay)
             {
-
                 player.InitPlayer();
                 cpu.InitPlayer();
                 cpu.Name = "CPU";
@@ -243,6 +242,7 @@ namespace BattleShip
 
         }
 
+        //템프값에 현재 선택된 배의 좌표들을 넘겨줌
         public void MoveShipCheck(Point cursur , Point[] temp)
         {
 
@@ -265,10 +265,13 @@ namespace BattleShip
         //할필요없이 매니저에서 자동으로 해당씬의 키입력값을 가져올듯?
         public void ShipPointUpdate(ConsoleKeyInfo key)
         {
+            //배들 있는지 체크 
             bool isShipsCheck = false;
+            //배를 돌릴수 있는지 체크
+            bool isNonRotation = false;
 
             Point[] temp = new Point[player.Ships[selectShipIndex].Size];
-
+            int size = player.Ships[selectShipIndex].Size;
 
             switch (key.Key)
             {
@@ -290,22 +293,29 @@ namespace BattleShip
 
 
                     player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
-
-
-                    //for(int i = 0; i < player.Ships[selectShipIndex].Size; i++)
-                    //{
+                    
                     player.ShipSetPoition(selectShipIndex, curSur);
 
+                    
+                    
                     //하나라도 배가 겹치면 배가있다 해줌
                     if (player.FindNonShip(player.Ships[selectShipIndex].Points, selectShipIndex))
-                    {
+                    {                       
                         isShipsCheck = true;
                     }
 
-                    //}
+                    //지금 선택된 배의 끝자락 좌표를 가지고 있을 포인트이다.
+                    Point point = player.Ships[selectShipIndex].Points[size-1];
+
+                    //배를 돌려봤을때 끝에 좌표가 맵의 끝보다 크거나 같을때 돌리지못함
+                    if (player.Field.Sea.GetLength(0) <= point.PosY  ||
+                        player.Field.Sea.GetLength(1) <= point.PosX  )
+                    {
+                        isNonRotation = true;
+                    }
 
                     //돌렸을때 배가 있었으면 다시 원상복귀 해줌
-                    if (isShipsCheck)
+                    if (isShipsCheck || isNonRotation)
                     {
                         player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
                     }
@@ -432,6 +442,7 @@ namespace BattleShip
             }
 
 
+            //좌표확정
             player.ShipSetPoition(selectShipIndex, curSur);
 
             //가로세로 디버그 
