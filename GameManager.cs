@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BattleShip
@@ -115,7 +116,7 @@ namespace BattleShip
                         isGameOver= true;
                     }
 
-                    if (cpu.IsAllHitShips())
+                    else if (cpu.IsAllHitShips())
                     {
                         winerName = cpu.Name;
                         isGameOver = true;
@@ -132,14 +133,7 @@ namespace BattleShip
 
         }
 
-        //타겟의 배가 모두 히트상태인가?
-        public bool IsAllHitShips(Player target)
-        {
-
-
-            return false;
-        }
-
+ 
 
         public void ShipsFight()
         {
@@ -151,11 +145,12 @@ namespace BattleShip
             //인터페이스 좌표 초기화
             Point interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
             Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            textCount++;
 
             bool isAttackedLocation = false;
 
-            int posX;
-            int posY;
+            int posX = 0;
+            int posY = 0;
 
             //플레이어가 좌표 제대로 입력했는지 체크
             while (isAttackedLocation == false)
@@ -200,6 +195,19 @@ namespace BattleShip
 
                 isAttackedLocation = cpu.ShotMissile(posX, posY, player);
             }
+
+            //공격당한 로그 띄우기
+            textCount++;
+            textCount++;
+            textCount++;
+            textCount++;
+            Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[{cpu.Name}]가  [X : {posX}] [Y : {posY}] 를 공격했다!");
+            Console.ResetColor();
+
+            Thread.Sleep(1500);
+
 
         }
 

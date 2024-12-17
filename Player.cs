@@ -86,6 +86,8 @@ namespace BattleShip
             PlaceShip();
         }
 
+        //히트한 배의 인덱스가 배들의 모든블럭수보다 크거나 같아질때
+        //승리조건 채워짐
         public bool IsAllHitShips()
         {
 
