@@ -169,7 +169,8 @@ namespace BattleShip
                 isHitAll = isHitAll && Points[i].IsHit;
             }
 
-            if (isHitAll)
+            // 아직 살아있는데 다 맞았다?
+            if (isHitAll && IsAlive)
             {
                 DoSink();
             }
