@@ -94,12 +94,12 @@ namespace BattleShip
                 //배 배치중...
                 while (isSelecting == false)
                 {
+                    Field.PrintField(player);
+                    selectInterface.ShipSelectingView();
+
                     //키 입력받아서 배 재배치
                     inputKey = Console.ReadKey(true);
                     ShipPointUpdate(inputKey);
-
-                    Field.PrintField(player);
-                    selectInterface.ShipSelectingView();
                 }
             }
             //세팅 완료 본격적인 게임 시작.
@@ -218,8 +218,10 @@ namespace BattleShip
             selectShipIndex = selectInterface.ShipSelectView(player);
 
 
-            Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY + 10);
-            Console.WriteLine(selectShipIndex);
+            //선택된 인덱스 제대로 들어왔나 확인
+            //Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY + 10);
+            //Console.Write("선택된 배의 인덱스값 : ");
+            //Console.WriteLine(selectShipIndex);
             isSelecting = false;
 
             //선택된 배의 첫번째 인덱스 좌표 가져와서 움직일 커서 좌표로 지정

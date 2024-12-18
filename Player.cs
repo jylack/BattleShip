@@ -349,8 +349,6 @@ namespace BattleShip
                 if (s.IsHit(missilePoint))
                 {
                     //배들블럭중 한곳 맞음.
-                    //여기 게임끝 문제터짐
-                    //이게 무조건 올라감 
                     HitShipIndex++;
                 }
             }
