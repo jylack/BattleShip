@@ -1,4 +1,5 @@
 using System;
+using System.Xml;
 
 namespace BattleShip
 {
@@ -113,9 +114,8 @@ namespace BattleShip
         // 기존 코드 리팩토링
         public static void PrintField(Player player, Player cpu)
         {
-            ClearField();
-
-            int needToSpace = player.Field.Sea.GetLength(1) + 1;
+            SelectInterface.ClearAll();
+            int needToSpace = player.Field.Sea.GetLength(1)*2 + 1;
             
             player.Field.PrintField(player, 0, false);
             cpu.Field.PrintField(cpu, needToSpace, true);
@@ -126,7 +126,7 @@ namespace BattleShip
         //위에거 오버로드 플레이어만 그리기
         public static void PrintField(Player player)
         {
-            ClearField();
+            SelectInterface.ClearAll();
             player.Field.PrintField(player, 0, false);
             Console.WriteLine("");
         }
@@ -165,17 +165,26 @@ namespace BattleShip
             }            
         }
         
-        private void PrintXIndex(Player player, int needToSpace, int i)
+        private void PrintXIndex(Player player, int needToSpace, int height)
         {
             // 0번 깨져서 어쩔수없다
             string indexStr = "ⓞ①②③④⑤⑥⑦⑧⑨ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ";
             string playerXIndex = indexStr.Substring(0, player.Field.Sea.GetLength(1));
-            Console.SetCursorPosition(needToSpace, i+2);
+            Console.SetCursorPosition(needToSpace, height+2);
             if (needToSpace > 0)
             {
                 AddTabToField();
             }            
-            Console.Write("/"+playerXIndex);
+            Console.Write("/");
+
+            for (int i = 0; i < playerXIndex.Length; i++)
+            {
+                Console.Write(playerXIndex.ToCharArray()[i]);
+                if (IsWin11() || IsUnix())
+                {
+                    Console.Write(" ");
+                }
+            }
         }
         
         // 기본 탭 설정
@@ -183,9 +192,6 @@ namespace BattleShip
         {
             // 기본 (윈도우 10 cmd라 가정)
             int tabSize = 2;
-            // 윈도 11이나 맥일때
-            if (IsWin11() || IsUnix()) { tabSize = 1; }
-            
             AddTabToField(tabSize);
         }
 
@@ -244,7 +250,12 @@ namespace BattleShip
             else
             {
                 Console.Write("∼");
-            }            
+            }
+            
+            if (IsWin11() || IsUnix())
+            {
+                Console.Write(" ");
+            }
         }
 
         // 배의 상태 프린트, 이중포문 버전
@@ -259,8 +270,12 @@ namespace BattleShip
                 if (hideShip && !s.Points[i].IsHit)
                 {
                     Console.Write("∼");
+                    if (IsWin11() || IsUnix())
+                    {
+                        Console.Write(" ");
+                    }                    
                     continue;
-                }                
+                }
                 
                 bool isHead = (i == 0);
                 bool isTail = (i == s.Points.Length - 1);
@@ -324,23 +339,12 @@ namespace BattleShip
                 if (s.Points[i].IsHit)
                 {
                     Console.ResetColor();
-                }                
-            }
-        }
-
-        public static void ClearField()
-        {
-            int height = Console.WindowHeight;
-            int width = Console.WindowWidth;
-            Console.SetCursorPosition(0,0);
-            
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
+                }
+                
+                if (IsWin11() || IsUnix())
                 {
                     Console.Write(" ");
                 }
-                Console.WriteLine("");
             }
         }
         
