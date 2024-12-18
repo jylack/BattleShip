@@ -110,7 +110,7 @@ namespace BattleShip
 
                 isInput = int.TryParse(Console.ReadLine(), out var shipIndex);
 
-                if (isInput && shipIndex > 0)
+                if (isInput && shipIndex > 0 && shipIndex < ply.Ships.Length)
                 {
                     //ply.SelectShipIndex = shipIndex;
                     return shipIndex - 1;
@@ -120,6 +120,7 @@ namespace BattleShip
                     Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
                     Console.Write("잘못된 입력입니다. 다시 입력해주세요 :");
                     textCount++;
+                    isInput = false;
                 }
             }
 

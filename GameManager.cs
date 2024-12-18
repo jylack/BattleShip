@@ -111,6 +111,9 @@ namespace BattleShip
                 {
                     ShipsFight();
 
+                    //비기기는 없다!
+                    //럽샷이 나도 플레이어가 승리하게 접대플레이...!
+                    //비김도 만들라면 둘다 true일때 비김으로 바꾸면 되긴한다. 
                     if (player.IsAllHitShips())
                     {
                         winerName = player.Name;
@@ -141,7 +144,8 @@ namespace BattleShip
             Field.PrintField(player, cpu);
             
             bool isAttackedLocation = false;
-            bool isInputTest = false;
+            bool isInputTruePosX = false;
+            bool isInputTruePosY = false;
 
             int posX = 0;
             int posY = 0;
@@ -157,14 +161,14 @@ namespace BattleShip
                 addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, inputX);
 
                 // 여기 파싱 안되면 X가 0으로 입력됨 -> X파싱하고 Y파싱 둘다 검증해야할듯
-                isInputTest = int.TryParse(Console.ReadLine(), out posX);
+                isInputTruePosX = int.TryParse(Console.ReadLine(), out posX);
 
                 string inputY = "y좌표 입력 : ";
                 addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, inputY);
 
-                isInputTest = int.TryParse(Console.ReadLine(), out posY);
+                isInputTruePosY = int.TryParse(Console.ReadLine(), out posY);
 
-                if (isInputTest)
+                if (isInputTruePosX && isInputTruePosY)
                 {
                     isAttackedLocation = player.ShotMissile(posY, posX, cpu);
                 }
@@ -185,6 +189,7 @@ namespace BattleShip
             while (isAttackedLocation == false)
             {
                 posX = rndPosXY.Next(player.Field.Sea.GetLength(0));
+                Thread.Sleep(1);
                 posY = rndPosXY.Next(player.Field.Sea.GetLength(1));
 
                 isAttackedLocation = cpu.ShotMissile(posX, posY, player);
@@ -219,18 +224,18 @@ namespace BattleShip
         }
 
 
-        //특정좌표 덮어쓰고 지우기 메서드
-        public void EraserPrint(int x, int y)
-        {
-            for (int i = 0; i < player.Field.Sea.GetLength(0) * 2; i++)
-            {
-                for (int j = 0; j < player.Field.Sea.GetLength(1) * 2; j++)
-                {
-                    Console.SetCursorPosition(x + j, y + i);
-                    Console.Write(" ");
-                }
-            }
-        }
+        ////특정좌표 덮어쓰고 지우기 메서드
+        //public void EraserPrint(int x, int y)
+        //{
+        //    for (int i = 0; i < player.Field.Sea.GetLength(0) * 2; i++)
+        //    {
+        //        for (int j = 0; j < player.Field.Sea.GetLength(1) * 2; j++)
+        //        {
+        //            Console.SetCursorPosition(x + j, y + i);
+        //            Console.Write(" ");
+        //        }
+        //    }
+        //}
 
         //템프값에 현재 선택된 배의 좌표들을 넘겨줌
         public void MoveShipCheck(Point cursur , Point[] temp)
@@ -260,8 +265,9 @@ namespace BattleShip
             //배를 돌릴수 있는지 체크
             bool isNonRotation = false;
 
-            Point[] temp = new Point[player.Ships[selectShipIndex].Size];
+
             int size = player.Ships[selectShipIndex].Size;
+            Point[] temp = new Point[size];
 
             switch (key.Key)
             {
@@ -297,8 +303,8 @@ namespace BattleShip
                     Point point = player.Ships[selectShipIndex].Points[size-1];
 
                     //배를 돌려봤을때 끝에 좌표가 맵의 끝보다 크거나 같을때 돌리지못함
-                    if (player.Field.Sea.GetLength(0) <= point.PosY  ||
-                        player.Field.Sea.GetLength(1) <= point.PosX  )
+                    if (player.Field.Sea.GetLength(1) <= point.PosY  ||
+                        player.Field.Sea.GetLength(0) <= point.PosX  )
                     {
                         isNonRotation = true;
                     }
@@ -342,7 +348,7 @@ namespace BattleShip
                     //현재 선택된 배가 가로일경우
                     if (player.Ships[selectShipIndex].isHorizontal)
                     {
-                        if (curSur.PosX + 1 < field.Sea.GetLength(1))
+                        if (curSur.PosX + 1 < field.Sea.GetLength(0))
                         {
                             curSur.PosX += 1;
                         }
@@ -350,7 +356,7 @@ namespace BattleShip
                     //현재 선택된 배가 세로일경우
                     else
                     {
-                        if (curSur.PosX + 1 <= field.Sea.GetLength(1) - player.Ships[selectShipIndex].Size)
+                        if (curSur.PosX + 1 <= field.Sea.GetLength(0) - player.Ships[selectShipIndex].Size)
                         {
                             curSur.PosX += 1;
                         }
@@ -375,7 +381,7 @@ namespace BattleShip
                     if (player.Ships[selectShipIndex].isHorizontal)
                     {
                         
-                        if (curSur.PosY + 1 <= field.Sea.GetLength(0) - player.Ships[selectShipIndex].Size)
+                        if (curSur.PosY + 1 <= field.Sea.GetLength(1) - player.Ships[selectShipIndex].Size)
                         {
                             curSur.PosY += 1;
 
@@ -384,7 +390,7 @@ namespace BattleShip
                     //현재 선택된 배가 세로일경우
                     else
                     {
-                        if (curSur.PosY + 1 < field.Sea.GetLength(0))
+                        if (curSur.PosY + 1 < field.Sea.GetLength(1))
                         {
                             curSur.PosY += 1;
                         }

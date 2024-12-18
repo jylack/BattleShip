@@ -24,6 +24,9 @@ namespace BattleShip
             // Test Code 111
            // SeongchulTest();
         }
+
+
+
         public static void SeongchulTest() 
         {
             Player player = new Player();
