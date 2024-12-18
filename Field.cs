@@ -260,7 +260,7 @@ namespace BattleShip
                 {
                     Console.Write("∼");
                     continue;
-                }                
+                }
                 
                 bool isHead = (i == 0);
                 bool isTail = (i == s.Points.Length - 1);
