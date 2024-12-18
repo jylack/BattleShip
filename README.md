@@ -2,6 +2,85 @@
  
 ![배틀쉽](battleShip.png)
 
+## 클래스 다이어그램 지원하는지 확인
+```mermaid
+classDiagram
+
+note for Player "플레이어와 필드/n배열 플레이어의 동작들 정의"
+note for SelectInterface "출력 관련한\n유틸리티 클래스"
+note for GameManager "게임 초기화\n및 게임 진행"
+note for Field "필드, bool 2차원 배열\n필드의 동작 정의"
+note for Ship "배, 배의 좌표값\n배의 피격 판정 등 동작 정의"
+
+Player --o GameManager
+Field --o Player
+Ship --o Player
+ShipType --o Ship
+Point --o Ship
+
+class SelectInterface{
+Point InterfacePoint
+int Width
+int Height
+ShipSelectingView()
+PrintUnderField()
+ClearField()
+PrintUnderField()
+}
+
+class GameManager {
+Player player
+Player Cpu
+InitGame()
+UpdateGame()
+EndGame()
+}
+
+class Player {
+string name
+Field myField
+Ships [] myShips
+PlaceShip()
+FindShip()
+PlaceRandomShips()
+ShotMissile()
+}
+
+
+class Field {
+bool[,] Sea
+TakeMissle()
+PrintField()
+PrintShip()
+PrintSea()
+}
+
+class Ship {
+string name
+int size
+Point points
+bool isAlive
+ShipType type
+}
+
+class Point {
+int a
+int b
+bool isHit
+compareHit()
+}
+
+class ShipType{
+    <<enumeration>>
+    Carrier
+    BattleShip
+    Cruiser
+    Submarine
+    Destroyer
+    End
+}
+```
+
 # 변경사항!!!
 
 ## Ship.cs
