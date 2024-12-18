@@ -104,7 +104,7 @@ namespace BattleShip
             // 띄어쓸 공간 필요하면, 탭추가
             if (needToSpace > 0)
             {
-                AddTabToField(2);
+                AddTabToField();
             }
             Console.Write(player.Name);
             Console.WriteLine();
@@ -114,21 +114,26 @@ namespace BattleShip
         public static void PrintField(Player player, Player cpu)
         {
             ClearField();
-            player.Field.PrintField(player, 0);
-            cpu.Field.PrintField(cpu, player.Field.Sea.GetLength(1)+1);     
+
+            int needToSpace = player.Field.Sea.GetLength(1) + 1;
+            
+            player.Field.PrintField(player, 0, false);
+            cpu.Field.PrintField(cpu, needToSpace, true);
+            // 디버깅용, cpu 배 보여줄려면 이걸로
+            // cpu.Field.PrintField(cpu, needToSpace, false);
             Console.WriteLine("");
         }
         //위에거 오버로드 플레이어만 그리기
         public static void PrintField(Player player)
         {
             ClearField();
-            player.Field.PrintField(player, 0);
+            player.Field.PrintField(player, 0, false);
             Console.WriteLine("");
         }
 
         // 깔끔버전!?
         // needToSpace 인자값이 0이면, 왼쪽부터 아니면 쭉 그려줌
-        public void PrintField(Player somePlayer, int needToSpace)
+        public void PrintField(Player somePlayer, int needToSpace, bool hideShip)
         {
             // 편하게 변수선언
             bool[,] playerSea = somePlayer.Field.Sea;
@@ -145,7 +150,7 @@ namespace BattleShip
                     // 해당 좌표에 배가 있을때
                     if (IsShipOnTarget(somePlayer, i, j))
                     {
-                        PrintShip(somePlayer, i, j);
+                        PrintShip(somePlayer, i, j, hideShip);
                     }
                     else
                     {
@@ -168,24 +173,35 @@ namespace BattleShip
             Console.SetCursorPosition(needToSpace, i+2);
             if (needToSpace > 0)
             {
-                AddTabToField(2);
+                AddTabToField();
             }            
             Console.Write("/"+playerXIndex);
         }
         
+        // 기본 탭 설정
+        private void AddTabToField()
+        {
+            // 기본 (윈도우 10 cmd라 가정)
+            int tabSize = 2;
+            // 윈도 11이나 맥일때
+            if (IsWin11() || IsUnix()) { tabSize = 1; }
+            
+            AddTabToField(tabSize);
+        }
+
         private void AddTabToField(int tabSize)
         {
             for (int i = 0; i < tabSize; i++)
             {
                 Console.Write("\t");
-            }
+            }            
         }
 
         private void PrintYIndex(int loop, int needToSpace)
         {
             if (needToSpace > 0)
             {
-                AddTabToField(2);
+                AddTabToField();
             }            
             
             if (loop < 10)
@@ -232,17 +248,24 @@ namespace BattleShip
         }
 
         // 배의 상태 프린트, 이중포문 버전
-        private void PrintShip(Player player, int x, int y)
+        private void PrintShip(Player player, int x, int y, bool hideShip)
         {
             foreach(Ship s in player.Ships)
             {
                 int i = s.FindPointByInt(x, y);
                 if (i == -1) { continue; }
+
+                // 쉽 숨기고 안맞은곳 출력 -> 바다 프린트하고 돌아가버리기
+                if (hideShip && !s.Points[i].IsHit)
+                {
+                    Console.Write("∼");
+                    continue;
+                }                
                 
                 bool isHead = (i == 0);
                 bool isTail = (i == s.Points.Length - 1);
                 bool isBody = (!isHead && !isTail);
-
+                
                 if (s.Points[i].IsHit)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -250,7 +273,6 @@ namespace BattleShip
                 
                 if (isHead && s.IsHorizontal() && s.Points[i].IsHit)
                 {
-
                     Console.Write("◀");
                 }
 
@@ -337,7 +359,7 @@ namespace BattleShip
             if (os.Version.Build < 22000)
             {
                 return false;
-            };
+            }
 
             return true;
         }

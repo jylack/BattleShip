@@ -61,10 +61,15 @@ namespace BattleShip
         }
         /* 여기까지 */
 
-        //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
         public void InitPlayer()
         {
-            _myField = new Field();
+            this.InitPlayer(15);
+        }
+        
+        //새로시작하거나 처음 시작할때 플레이어 세팅 초기화.
+        public void InitPlayer(int fieldSize)
+        {
+            _myField = new Field(fieldSize);
 
             _ships = new Ship[(int)ShipType.end];
 

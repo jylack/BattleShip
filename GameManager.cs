@@ -72,7 +72,7 @@ namespace BattleShip
             if (isGamePlay)
             {
                 player.InitPlayer();
-                cpu.InitPlayer();
+                cpu.InitPlayer(10);
                 cpu.Name = "CPU";
                 cpu.PlaceRandomShips();
                 Field.ClearField();
