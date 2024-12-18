@@ -76,7 +76,7 @@ namespace BattleShip
                 cpu.InitPlayer(10);
                 cpu.Name = "CPU";
                 cpu.PlaceRandomShips();
-                Console.Clear();
+                Field.ClearField();
                 Console.Write("플레이어의 이름을 입력해 주세요 : ");
                 player.Name = Console.ReadLine();
             }
@@ -127,7 +127,8 @@ namespace BattleShip
 
                 isGamePlay = false;
 
-                Console.Clear();
+                Field.ClearField();
+
                 Console.WriteLine($"{winerName}가 이겼습니다!");
             }
 
@@ -139,29 +140,32 @@ namespace BattleShip
         {
             //게임 시작시 cpu player 둘다 그려줌
             Field.PrintField(player, cpu);
-            
+
+            int textCount = 1;
+
+            //인터페이스 좌표 초기화
+            Point interfacePoint = new Point(Console.CursorLeft, Console.CursorTop);
+            Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            textCount++;
+
             bool isAttackedLocation = false;
             bool isInputTest = false;
 
             int posX = 0;
             int posY = 0;
-            int addedLine = 0;
-            
+
             //플레이어가 좌표 제대로 입력했는지 체크
             while (isAttackedLocation == false)
             {
-                string strIntroduce = "공격하고 싶은 좌표를 입력해 주세요";
-                addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, strIntroduce);
+                Console.WriteLine("공격하고 싶은 좌표를 입력해 주세요");
 
-                string inputX = "x좌표 입력 : ";
-                addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, inputX);
-
-                // 여기 파싱 안되면 X가 0으로 입력됨 -> X파싱하고 Y파싱 둘다 검증해야할듯
+                Console.Write("x좌표 입력 : ");
                 isInputTest = int.TryParse(Console.ReadLine(), out posX);
 
-                string inputY = "y좌표 입력 : ";
-                addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, inputY);
 
+                Console.WriteLine();
+
+                Console.Write("y좌표 입력 : ");
                 isInputTest = int.TryParse(Console.ReadLine(), out posY);
 
                 if (isInputTest)
@@ -170,11 +174,9 @@ namespace BattleShip
                 }
                 else
                 {
-                    string notValid = "잘못 입력하셨습니다 다시 입력해주세요.";
-                    addedLine =+ SelectInterface.PrintUnderField(player, cpu, addedLine, notValid, ConsoleColor.Red);
+                    Console.WriteLine("잘못 입력하셨습니다 다시 입력해주세요.");
                 }
 
-                addedLine++;
             }
 
             Random rndPosXY = new Random();
@@ -191,9 +193,18 @@ namespace BattleShip
             }
 
             //공격당한 로그 띄우기
-            string attacked = $"[{cpu.Name}]가  [X : {posX}] [Y : {posY}] 를 공격했다!";
-            SelectInterface.PrintUnderField(player, cpu, addedLine+4, attacked, ConsoleColor.Green);
+            textCount++;
+            textCount++;
+            textCount++;
+            textCount++;
+            Console.SetCursorPosition(interfacePoint.PosX, interfacePoint.PosY + textCount);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[{cpu.Name}]가  [X : {posX}] [Y : {posY}] 를 공격했다!");
+            Console.ResetColor();
+
             Thread.Sleep(1500);
+
+
         }
 
         //움직일 배 선택하는 방법을 써줄 인터페이스 그려주기
@@ -448,7 +459,7 @@ namespace BattleShip
 
         public void LogoPrint()
         {
-            Console.Clear();
+            Field.ClearField();
             //로고 생성후 프린트해주기.
             for (int i = 0; i < logo.Length; i++)
             {

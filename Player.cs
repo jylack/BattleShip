@@ -328,6 +328,7 @@ namespace BattleShip
             if (target.Field.Sea[x, y])
             {
                 Console.WriteLine("이미 미사일을 쏜 곳입니다");
+                Console.WriteLine();
                 isFieldHit = false;
             }
 
