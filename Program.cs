@@ -13,12 +13,12 @@ namespace BattleShip
         {
             GameManager gameManager = new GameManager();
             gameManager.InitGame();
-
+            
             while (gameManager.isGamePlay)
             {
                 gameManager.UpdateGame();
             }
-
+            
             gameManager.EndGame();
 
             // Test Code 111
@@ -98,7 +98,6 @@ namespace BattleShip
             Console.WriteLine("os.Version : " + os.Version);
             Console.WriteLine("os.ServicePack : " + os.ServicePack);
             Console.WriteLine("os.Version.Build : " + os.Version.Build);
-
         }        
     }
 }

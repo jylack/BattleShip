@@ -75,7 +75,7 @@ namespace BattleShip
                 cpu.InitPlayer();
                 cpu.Name = "CPU";
                 cpu.PlaceRandomShips();
-                Console.Clear();
+                Field.ClearField();
                 Console.Write("플레이어의 이름을 입력해 주세요 : ");
                 player.Name = Console.ReadLine();
             }
@@ -126,7 +126,7 @@ namespace BattleShip
 
                 isGamePlay = false;
 
-                Console.Clear();
+                Field.ClearField();
 
                 Console.WriteLine($"{winerName}가 이겼습니다!");
             }
@@ -463,6 +463,7 @@ namespace BattleShip
 
         public void LogoPrint()
         {
+            Field.ClearField();
             //로고 생성후 프린트해주기.
             for (int i = 0; i < logo.Length; i++)
             {
