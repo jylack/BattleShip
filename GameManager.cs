@@ -10,6 +10,7 @@ namespace BattleShip
 {
     internal class GameManager
     {
+        
 
         public bool isGamePlay = false;
 
@@ -238,8 +239,6 @@ namespace BattleShip
                     Console.Write(" ");
                 }
             }
-
-
         }
 
         //템프값에 현재 선택된 배의 좌표들을 넘겨줌
@@ -291,7 +290,6 @@ namespace BattleShip
                 //회전시킬꺼야~
                 case ConsoleKey.R:
 
-
                     player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
                     
                     player.ShipSetPoition(selectShipIndex, curSur);
@@ -314,7 +312,7 @@ namespace BattleShip
                         isNonRotation = true;
                     }
 
-                    //돌렸을때 배가 있었으면 다시 원상복귀 해줌
+                    //돌렸을때 배가 있었거나 맵의 끝이면 다시 원상복귀 해줌
                     if (isShipsCheck || isNonRotation)
                     {
                         player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
@@ -334,11 +332,11 @@ namespace BattleShip
                         curSur.PosY -= 1;
                     }
 
-
+                    //이동한곳에 배가있나? 하고 테스트
                     MoveShipCheck(curSur,temp);
 
                     //겹친게 있으면 커서값 원상복구
-                    //이동한걸 다시 취소해야해서
+                    //이동한걸 다시 취소해야해서 역으로 증감
                     if (player.FindNonShip(temp, selectShipIndex))
                     {
                         curSur.PosY += 1;
@@ -410,7 +408,6 @@ namespace BattleShip
                         curSur.PosY -= 1;
                     }
 
-
                     break;
 
                 case ConsoleKey.W:
@@ -423,14 +420,11 @@ namespace BattleShip
 
                     MoveShipCheck(curSur, temp);
 
-
-
                     //겹친게 있으면 커서값 원상복구
                     //이동한걸 다시 취소해야해서
                     if (player.FindNonShip(temp, selectShipIndex))
                     {
                         curSur.PosX += 1;
-
                     }
 
 

@@ -138,8 +138,9 @@ namespace BattleShip
                     {
                         for(int z = 0; z < Ships[i].Size; z++)
                         {
-                            if (Ships[i].Points[z].PosX == points[j].PosX &&
-                                Ships[i].Points[z].PosY == points[j].PosY )
+                            if (points[j].CompareHit(Ships[i].Points[z]))
+                            //if (Ships[i].Points[z].PosX == points[j].PosX &&
+                            //    Ships[i].Points[z].PosY == points[j].PosY )
                             {
                                 return true;
                             }
@@ -177,8 +178,9 @@ namespace BattleShip
             for (int i = 0; i < MaxShipBlock; i++)
             {
                 //모든 좌표중에 현재 들어온 값이 있는가? 겹치는게 있으면 true
-                if (allPoints[i].PosX == temp.PosX &&
-                    allPoints[i].PosY == temp.PosY)
+                //if (allPoints[i].PosX == temp.PosX &&
+                //    allPoints[i].PosY == temp.PosY)
+                if (temp.CompareHit(allPoints[i]))
                 {
                     return true;
                 }
