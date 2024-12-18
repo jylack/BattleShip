@@ -11,26 +11,31 @@ namespace BattleShip
     internal class GameManager
     {
         
-
+        //게임 시작할건가?
         public bool isGamePlay = false;
-
+        //게임 시작전 세팅이 다 끝났는가?
         bool isGameSetComplete = false;
-
+        //배 선택중이냐?
         bool isSelecting = false;
-
+        //게임 끝났는가?
         bool isGameOver = false;
+        //현재 내가 움직일 배의 인덱스
+        int selectShipIndex = 0;
 
 
         Player player = new Player();
         Player cpu = new Player();
         Field field = new Field();
 
+        //UI 관련 클래스
         SelectInterface selectInterface = new SelectInterface();
 
+        //우릐의 기준점. 플레이어가 조종할 좌표
         Point curSur = new Point(0, 0);
-
+        
         ConsoleKeyInfo inputKey;
 
+        //로-고
         string[] logo = {   "--------------------------------------------------------------------------------------------------" ,
                             "--------------------------------------------------------------------------------------------------" ,
                             "--=%%%%%%%%*--=#%%%%%*+%%%%%%@%*%%%%%%%%#%%%@=---*@%%%%@#=+%%%%%%%*=#%%%%+%@%%+#%%%#+%%%%%%%#+----" ,
@@ -44,9 +49,7 @@ namespace BattleShip
                             "===+*******=-=***+==+**+=+++++---=++++===+++++++==+++++++==+++++++==++++++++++=+**+=+***+=====----" ,
                             "---=--=--------==-----=====-=--=====================-===---===-=========-==----=====-----==-------" };
 
-        int selectShipIndex = 0;
-
-
+ 
         //플레이어,cpu 생성 , 시작화면 생성
         public void InitGame()
         {
@@ -55,21 +58,31 @@ namespace BattleShip
             Console.WriteLine("게임을 시작 하시겠습니까?");
             Console.WriteLine("1.게임시작\t 2.게임 종료");
 
-            inputKey = Console.ReadKey(true);
+            //1과 2빼고 다른걸 눌렀을때 무한루프 올바른값 체킹용
+            bool isGame = true;
 
-            switch (inputKey.Key)
+            while (isGame)
             {
-                case ConsoleKey.D1:
-                //isGamePlay = true;
-                //break;
-                case ConsoleKey.NumPad1:
-                    isGamePlay = true;
-                    break;
-                default:
-                    isGamePlay = false;
-                    break;
+                inputKey = Console.ReadKey(true);
+
+                switch (inputKey.Key)
+                {
+                    case ConsoleKey.D1:
+                    //isGamePlay = true;
+                    //break;
+                    case ConsoleKey.NumPad1:
+                        isGamePlay = true;
+                        isGame = false;
+                        break;
+                    case ConsoleKey.D2:
+                    case ConsoleKey.NumPad2:
+                        isGamePlay = false;
+                        isGame = false;
+                        break;
+                }
             }
 
+            //게임 시작도 안할건데 메모리 할당 할필요없어서 초기화부분은 게임시작할시에만 작동
             if (isGamePlay)
             {
                 player.InitPlayer();
@@ -83,6 +96,7 @@ namespace BattleShip
 
         }
 
+        
         //턴 반복되는동안 수행 여기서 좌표입력받고 cpu가 공격하고 실행함.
         public void UpdateGame()
         {
@@ -168,6 +182,7 @@ namespace BattleShip
 
                 isInputTruePosY = int.TryParse(Console.ReadLine(), out posY);
 
+                //x 와 y 둘다 제대로된 값을 넣었는지?
                 if (isInputTruePosX && isInputTruePosY)
                 {
                     isAttackedLocation = player.ShotMissile(posY, posX, cpu);
@@ -181,15 +196,16 @@ namespace BattleShip
                 addedLine++;
             }
 
+            //좌표랜덤
             Random rndPosXY = new Random();
 
+            //NPC가 좌표 제대로 입력했는지 체크
             isAttackedLocation = false;
 
-            //NPC가 좌표 제대로 입력했는지 체크
             while (isAttackedLocation == false)
             {
                 posX = rndPosXY.Next(player.Field.Sea.GetLength(0));
-                Thread.Sleep(1);
+                Thread.Sleep(1);//이거 같은 랜덤 변수를 반복문안에서 여러번 쓸때 중간에 껴주면 중복값 안나옴
                 posY = rndPosXY.Next(player.Field.Sea.GetLength(1));
 
                 isAttackedLocation = cpu.ShotMissile(posX, posY, player);
@@ -211,19 +227,22 @@ namespace BattleShip
             //Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY);            
             selectShipIndex = selectInterface.ShipSelectView(player);
 
-
+            //디버그 코드
             //선택된 인덱스 제대로 들어왔나 확인
             //Console.SetCursorPosition(selectInterface.Point.PosX, selectInterface.Point.PosY + 10);
             //Console.Write("선택된 배의 인덱스값 : ");
             //Console.WriteLine(selectShipIndex);
+
+            //지금 배 좌표 선택이 끝났는지 판별
             isSelecting = false;
 
             //선택된 배의 첫번째 인덱스 좌표 가져와서 움직일 커서 좌표로 지정
-            curSur = new Point(player.Ships[selectShipIndex].Points[0].PosX, player.Ships[selectShipIndex].Points[0].PosY);
+            curSur = new Point(player.Ships[selectShipIndex].Points[0].PosX, 
+                player.Ships[selectShipIndex].Points[0].PosY);
 
         }
 
-
+        /*
         ////특정좌표 덮어쓰고 지우기 메서드
         //public void EraserPrint(int x, int y)
         //{
@@ -236,6 +255,8 @@ namespace BattleShip
         //        }
         //    }
         //}
+        */
+
 
         //템프값에 현재 선택된 배의 좌표들을 넘겨줌
         public void MoveShipCheck(Point cursur , Point[] temp)
@@ -265,7 +286,7 @@ namespace BattleShip
             //배를 돌릴수 있는지 체크
             bool isNonRotation = false;
 
-
+            //현재 배대신 미리 좌표움직여서 충돌체크해줄 temp 배 생성
             int size = player.Ships[selectShipIndex].Size;
             Point[] temp = new Point[size];
 
@@ -287,8 +308,9 @@ namespace BattleShip
                 //회전시킬꺼야~
                 case ConsoleKey.R:
 
+                    //현재 선택된 배를 일단 돌려본다.
                     player.Ships[selectShipIndex].isHorizontal = !player.Ships[selectShipIndex].isHorizontal;
-                    
+                    //좌표지정
                     player.ShipSetPoition(selectShipIndex, curSur);
 
                     

@@ -290,7 +290,8 @@ namespace BattleShip
             }
         }
 
-        /* 필드cs에 있는걸 플레이어로 옮겨옴
+        /*성철 형님 코드
+         * 필드cs에 있는걸 플레이어로 옮겨옴
         * 사이즈보다 큰곳에 미사일을 쏜다면, false 반환
         * 이미 쏜곳에 미사일을 또 쐈다면 false 반환
         * 쏠수 있는 곳에 (Field의 값이 false) 쏜다면 true
@@ -309,6 +310,7 @@ namespace BattleShip
             int xFieldSize = target.Field.Sea.GetLength(0) - 1;
             int yFieldSize = target.Field.Sea.GetLength(1) - 1;
 
+
             if (xFieldSize < x || yFieldSize < y)
             {
                 isOverField = true;
@@ -317,6 +319,7 @@ namespace BattleShip
 
             isFieldHit = true;
 
+            //필드넘어감
             if (isOverField)
             {
                 Console.WriteLine("필드의 범위를 넘어섰습니다");
@@ -324,8 +327,9 @@ namespace BattleShip
                 return false;
             }
 
+            //cpu도 쏜데 또 쐈을경우 출력되던거임.
             // 이미 쏜곳에 쐈다
-            if (target.Field.Sea[x, y])
+            if (target.Field.Sea[x, y] && Name != "CPU")
             {
                 Console.WriteLine("이미 미사일을 쏜 곳입니다");
                 isFieldHit = false;
@@ -335,6 +339,7 @@ namespace BattleShip
             {
                 return false;
             };
+
 
             // 필드가 미사일을 맞음
             target.Field.Sea[x, y] = true;
