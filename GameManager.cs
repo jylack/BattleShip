@@ -75,7 +75,7 @@ namespace BattleShip
                 cpu.InitPlayer(10);
                 cpu.Name = "CPU";
                 cpu.PlaceRandomShips();
-                Field.ClearField();
+                Console.Clear();
                 Console.Write("플레이어의 이름을 입력해 주세요 : ");
                 player.Name = Console.ReadLine();
             }
@@ -126,8 +126,7 @@ namespace BattleShip
 
                 isGamePlay = false;
 
-                Field.ClearField();
-
+                Console.Clear();
                 Console.WriteLine($"{winerName}가 이겼습니다!");
             }
 
@@ -145,29 +144,22 @@ namespace BattleShip
 
             int posX = 0;
             int posY = 0;
-            int addedLine = 0;            
+            int addedLine = 0;
             
             //플레이어가 좌표 제대로 입력했는지 체크
             while (isAttackedLocation == false)
             {
-                // 추가 라인이 윈도우 크기보다 넘어가면 0으로 초기화
-                if (addedLine > Console.WindowHeight)
-                {
-                    addedLine = 0;
-                }
-
-                addedLine++;
                 string strIntroduce = "공격하고 싶은 좌표를 입력해 주세요";
-                addedLine =+ SelectInterface.PrintUnderField(player, cpu, addedLine, strIntroduce);
+                addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, strIntroduce);
 
                 string inputX = "x좌표 입력 : ";
-                addedLine =+ SelectInterface.PrintUnderField(player, cpu, addedLine, inputX);
+                addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, inputX);
 
                 // 여기 파싱 안되면 X가 0으로 입력됨 -> X파싱하고 Y파싱 둘다 검증해야할듯
                 isInputTest = int.TryParse(Console.ReadLine(), out posX);
 
                 string inputY = "y좌표 입력 : ";
-                addedLine =+ SelectInterface.PrintUnderField(player, cpu, addedLine, inputY);
+                addedLine = SelectInterface.PrintUnderField(player, cpu, addedLine, inputY);
 
                 isInputTest = int.TryParse(Console.ReadLine(), out posY);
 
@@ -179,8 +171,9 @@ namespace BattleShip
                 {
                     string notValid = "잘못 입력하셨습니다 다시 입력해주세요.";
                     addedLine =+ SelectInterface.PrintUnderField(player, cpu, addedLine, notValid, ConsoleColor.Red);
-                    addedLine++;
                 }
+
+                addedLine++;
             }
 
             Random rndPosXY = new Random();
@@ -459,7 +452,7 @@ namespace BattleShip
 
         public void LogoPrint()
         {
-            Field.ClearField();
+            Console.Clear();
             //로고 생성후 프린트해주기.
             for (int i = 0; i < logo.Length; i++)
             {

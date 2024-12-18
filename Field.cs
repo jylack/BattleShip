@@ -113,8 +113,7 @@ namespace BattleShip
         // 기존 코드 리팩토링
         public static void PrintField(Player player, Player cpu)
         {
-            ClearField();
-
+            SelectInterface.ClearAll();
             int needToSpace = player.Field.Sea.GetLength(1) + 1;
             
             player.Field.PrintField(player, 0, false);
@@ -126,7 +125,7 @@ namespace BattleShip
         //위에거 오버로드 플레이어만 그리기
         public static void PrintField(Player player)
         {
-            ClearField();
+            SelectInterface.ClearAll();
             player.Field.PrintField(player, 0, false);
             Console.WriteLine("");
         }
@@ -325,22 +324,6 @@ namespace BattleShip
                 {
                     Console.ResetColor();
                 }                
-            }
-        }
-
-        public static void ClearField()
-        {
-            int height = Console.WindowHeight;
-            int width = Console.WindowWidth;
-            Console.SetCursorPosition(0,0);
-            
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    Console.Write(" ");
-                }
-                Console.WriteLine("");
             }
         }
         

@@ -128,36 +128,41 @@ namespace BattleShip
             //Console.Write("배를 선택해 주십시오");
         }
 
-        // 디폴트 흰색 색상으로 텍스트 출력
-        public static int PrintUnderField(Player player, Player cpu, int addedLine, string text)
-        {
-            return PrintUnderField(player, cpu, addedLine, text, ConsoleColor.White);
-        }
-
-        public static int GetBiggerField()
-        {
-            
-        }
-        
-        // 필드 아래에 출력해주기
-        public static int PrintUnderField(Player player, Player cpu, int addedLine, string text, ConsoleColor cc)
+        // 둘 중에 큰 필드의 높이를 반환
+        public static int GetBiggerFieldHeight(Player player, Player cpu)
         {
             int p1Height = player.Field.Sea.GetLength(0);
             int p2Height = cpu.Field.Sea.GetLength(0);
             // 필드 비교해서 더 큰 필드 아래에서 출력 할수 있도록, 각 플레이어 네임과 Y인덱스 추가하여 +2
             int fieldHeight = (p1Height > p2Height ? p1Height : p2Height) + 2;
-            
-            Console.SetCursorPosition(0, fieldHeight);
-            // addedLine 만큼 아래 줄에 띄어쓰기
-            for (int i = 0; i < addedLine; i++)
-            {
-                Console.WriteLine("");
-            }
 
+            return fieldHeight;
+        }        
+        
+        // 디폴트 흰색 색상으로 텍스트 출력
+        public static int PrintUnderField(Player player, Player cpu, int addedLine, string text)
+        {
+            return PrintUnderField(player, cpu, addedLine, text, ConsoleColor.White);
+        }
+        
+        // 필드 아래에 출력해주기
+        public static int PrintUnderField(Player player, Player cpu, int addedLine, string text, ConsoleColor cc)
+        {
+            int fieldHeight = GetBiggerFieldHeight(player, cpu);
+            int debugHeight = Console.WindowHeight;            
+            // 출력부가 윈도우 크기보다 크면
+            if (fieldHeight + addedLine > debugHeight -1)
+            {
+                ClearUnderField(player, cpu);
+                addedLine = 0;
+            }
+            
+            Console.SetCursorPosition(0, fieldHeight + addedLine);
             Console.ForegroundColor = cc;
             Console.Write(text);
             Console.ResetColor();
 
+            // text 한줄 추가
             return addedLine + 1;
         }
         
@@ -165,5 +170,34 @@ namespace BattleShip
         {
             return 0;
         }
+
+        // 전체 클리어, 처음부터 끝까지 클리어
+        public static void ClearAll()
+        {
+            ClearAll(0, 0);
+        }
+        
+        // 전체 클리어, 원하는 포지션 설정 가능
+        public static void ClearAll(int startWidth, int startHeight)
+        {
+            int windowHeight = Console.WindowHeight;
+            int windowWidth = Console.WindowWidth;
+            Console.SetCursorPosition(startWidth,startHeight);
+            
+            for (int i = startHeight; i < windowHeight; i++)
+            {
+                for (int j = startWidth; j < windowWidth; j++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine("");
+            }
+        }
+        
+        public static void ClearUnderField(Player player, Player cpu)
+        {
+            int fieldHeight = GetBiggerFieldHeight(player, cpu);
+            ClearAll(0, fieldHeight);
+        }     
     }
 }
