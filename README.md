@@ -61,6 +61,7 @@ int size
 Point points
 bool isAlive
 ShipType type
+bool IsHit()
 }
 
 class Point {
