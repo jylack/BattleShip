@@ -16,7 +16,7 @@ namespace BattleShip
         {
             get { return _sea;  }
         }
-
+        
         // 암것도 없으면 10x10 필드로 생성, false로 초기화
         public Field()
         {
